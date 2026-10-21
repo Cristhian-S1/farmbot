@@ -284,7 +284,7 @@ Las versiones se verificaron en Context7 o en la documentación oficial al 21 de
 | --- | --- | --- | --- | --- |
 | F4.1 | Prueba con el robot suspendido o echado: comandos de pie y echado, sin desplazamiento | F3.5 | CH + CS (presentes ambos) | Secuencia completa con el control remoto en mano; sin respuestas anómalas |
 | F4.2 | Desplazamiento a 0,3 m/s en zona despejada de 5 m, con zona de exclusión marcada | F4.1 | CH + CS | Velocidad medida ≤ 0,3 m/s ± 10 %; `StopMove` por watchdog en < 0,5 s tras cortar comandos |
-| F4.3 | Detención ante obstáculo (RFN5) con evasión activada y un obstáculo blando | F4.2 | CH + CS | Se detiene antes de 0,5 m en 10 de 10 intentos |
+| F4.3 | Detención ante obstáculo (RFN5) con evasión activada y un obstáculo blando | F4.2 | CH + CS | El software ordena el paro al medir menos de 0,5 m más el margen `vx_max` × 0,2 s (0,6 m a 0,5 m/s) en 10 de 10 intentos, sin contacto; se registra la distancia final de cada intento para calibrar el margen de frenado |
 | F4.4 | Recorrido de una hilera de prueba con captura por zona y cola local | F4.3, F3.3 | CH + CS | Capturas de todas las zonas o incidencia explícita; sin zonas inventadas |
 | F4.5 | Prueba de corte de enlace (B3 o B4) durante el recorrido | F4.4, F3.4 | CH | El robot sigue el protocolo de pérdida de enlace (D9); la evidencia se sincroniza después |
 
@@ -314,7 +314,7 @@ La regla de oro es no tocar la configuración de red ni el `cyclonedds.xml` del 
 ### 4.2. Procedimiento de arranque seguro
 
 1. Revisar el entorno: zona despejada de al menos 2 m alrededor [U4], suelo firme y seco, temperatura entre 5 y 35 °C [U4], sin personas dentro de la zona de exclusión.
-2. Revisar el robot: batería cargada (> 50 % para pruebas y > 80 % para recorridos), fijación del dock y de los accesorios, y patas libres.
+2. Revisar el robot: batería cargada (> 50 % para pruebas y > 80 % para recorridos; son precondiciones del procedimiento, distintas de los límites de software de 30 % para iniciar y 25 % para detener de la sección 4.4), fijación del dock y de los accesorios, y patas libres.
 3. Encender el control remoto, y después el robot con su secuencia de botones del manual [U4].
 4. Esperar a que el robot se ponga de pie y estabilice. Comprobar con el control remoto que responde.
 5. En la PC, ejecutar `scripts/red/verificar_red.sh`, que debe dar PASA.

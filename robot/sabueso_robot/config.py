@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import logging
 import os
 from dataclasses import dataclass, fields
 from pathlib import Path
@@ -13,6 +15,8 @@ RUTA_CONFIG = RAIZ_REPO / "config" / "robot.yaml"
 RUTA_LIMITES = RAIZ_REPO / "config" / "limites_seguridad.yaml"
 VARIABLE_CONFIG = "SABUESO_CONFIG"
 VARIABLE_LIMITES = "SABUESO_LIMITES"
+
+registro = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -56,4 +60,11 @@ def cargar_config(ruta: str | None = None) -> ConfigRobot:
 
 
 def cargar_limites(ruta: str | None = None) -> Limites:
-    return Limites.desde_dict(_leer_yaml(_resolver(ruta, VARIABLE_LIMITES, RUTA_LIMITES)))
+    """Carga y valida los límites; deja constancia de la ruta, el hash y los valores (S13)."""
+    archivo = _resolver(ruta, VARIABLE_LIMITES, RUTA_LIMITES)
+    limites = Limites.desde_dict(_leer_yaml(archivo))
+    huella = hashlib.sha256(archivo.read_bytes()).hexdigest()[:16]
+    if archivo.resolve() != RUTA_LIMITES.resolve():
+        registro.warning("límites cargados desde una ruta no estándar: %s", archivo)
+    registro.info("límites %s (sha256 %s): %s", archivo, huella, limites)
+    return limites

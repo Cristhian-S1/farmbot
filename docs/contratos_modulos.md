@@ -140,3 +140,12 @@ El envío es `POST {url_base}/capturas` (multipart: `metadatos` en JSON + `image
 class EstadoMision(Enum): DISPONIBLE, VERIFICANDO, EN_PATRULLAJE, PAUSADA,
                           ADQUISICION_CERRADA, PROCESANDO, COMPLETADA, INCOMPLETA
 ```
+
+## Cambios posteriores a la revisión de seguridad
+
+Tras `docs/revision_seguridad.md`, el orquestador cambió las interfaces de `seguridad/`:
+
+- `SupervisorSeguridad(puerta, reloj=time.monotonic, max_edad_s=0.2, periodo_s=0.05)` ya no recibe la edad de la telemetría. Vigila por separado la vigencia de las lecturas de obstáculo y de batería mientras hay movimiento.
+- `PuertaMovimiento(..., latido_max_s=None)`: si se indica, `mover()` exige un latido reciente del supervisor (`registrar_latido()`).
+- `Limites` agrega `vx_atras_max` y rechaza valores no finitos o fuera de RFN5.
+- `ClienteSportGo2` ya no expone `Damp`.

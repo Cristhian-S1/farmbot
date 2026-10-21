@@ -1,0 +1,5 @@
+# S12 (docs/revision_seguridad.md): los cambios de seguridad requieren revisión.
+# Agregar el usuario de GitHub de Cristian Huanca cuando esté disponible.
+/robot/sabueso_robot/seguridad/ @Cristhian-S1
+/config/limites_seguridad.yaml @Cristhian-S1
+/tests/robot/test_linea_base_limites.py @Cristhian-S1

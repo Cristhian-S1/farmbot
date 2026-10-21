@@ -1,9 +1,11 @@
-# Límites de seguridad del movimiento (sección 4.4 del plan; RFN5).
-# Solo pueden reducirse. Cambiar estos valores requiere aprobación de ambos integrantes.
+# Límites de seguridad del movimiento (sección 4.4 del plan; RFN5; docs/revision_seguridad.md).
+# Solo pueden endurecerse. Cambiar estos valores requiere aprobación de ambos integrantes
+# (CODEOWNERS) y no puede superar la línea base de tests/robot/test_linea_base_limites.py.
 vx_max: 0.5            # m/s; tope absoluto del proyecto < 1.0 m/s
-vy_max: 0.2            # m/s
-vyaw_max: 0.5          # rad/s
-timeout_comando_s: 0.3 # watchdog: sin comandos durante este tiempo → StopMove
-distancia_paro_m: 0.5  # detención ante obstáculos (RFN5)
-bateria_min_inicio: 30     # %; no iniciar una misión por debajo
+vx_atras_max: 0.0      # m/s; retroceso prohibido salvo prueba supervisada
+vy_max: 0.0            # m/s; lateral prohibido salvo prueba supervisada
+vyaw_max: 0.5          # rad/s; tope del código 1.0 rad/s
+timeout_comando_s: 0.3 # watchdog: sin comandos durante este tiempo → StopMove (máx. 0.3 s)
+distancia_paro_m: 0.5  # detención ante obstáculos (RFN5, mín. 0.5 m); el supervisor suma un margen
+bateria_min_inicio: 30     # %; no iniciar una misión por debajo (límite de software)
 bateria_min_operacion: 25  # %; detener la misión por debajo (por verificar en F4.4)

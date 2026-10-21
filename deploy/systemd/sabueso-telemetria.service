@@ -1,0 +1,17 @@
+[Unit]
+Description=Sabueso: registro continuo de telemetria del Go2
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/sabueso
+Environment=CYCLONEDDS_HOME=%h/cyclonedds/install
+Environment=SABUESO_CONFIG=%h/sabueso/config/robot.yaml
+Environment=PYTHONUNBUFFERED=1
+ExecStart=%h/sabueso/.venv/bin/python -m sabueso_robot telemetria --registrar
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
