@@ -38,7 +38,9 @@ def _transporte_urllib(url: str, cuerpo: bytes, cabeceras: dict, timeout: float)
         try:
             return error.code
         finally:
-            error.close()
+            # En Python 3.8, HTTPError sin cuerpo (fp=None) lanza KeyError al cerrarse.
+            if getattr(error, "fp", None) is not None:
+                error.close()
 
 
 def _multipart(captura: Captura, jpeg: bytes) -> tuple[bytes, str]:
