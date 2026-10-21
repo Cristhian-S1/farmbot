@@ -1,0 +1,9 @@
+# Límites de seguridad del movimiento (sección 4.4 del plan; RFN5).
+# Solo pueden reducirse. Cambiar estos valores requiere aprobación de ambos integrantes.
+vx_max: 0.5            # m/s; tope absoluto del proyecto < 1.0 m/s
+vy_max: 0.2            # m/s
+vyaw_max: 0.5          # rad/s
+timeout_comando_s: 0.3 # watchdog: sin comandos durante este tiempo → StopMove
+distancia_paro_m: 0.5  # detención ante obstáculos (RFN5)
+bateria_min_inicio: 30     # %; no iniciar una misión por debajo
+bateria_min_operacion: 25  # %; detener la misión por debajo (por verificar en F4.4)

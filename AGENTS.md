@@ -9,11 +9,17 @@ This repository documents **Sabueso**, a Proyecto IV system for monitoring tomat
 - `fases/diagramas/`: standalone HTML diagrams; `svg/` contains diagram assets embedded in reports.
 - `.beads/`: issue-tracking data; `.agents/skills/beads/`: local workflow instructions.
 
-There are no application source or test directories yet.
+- `robot/sabueso_robot/`: software for the robot dock; `seguridad/` is the only module allowed to command motion.
+- `scripts/red/`, `scripts/robot/`: network setup (PC or VirtualBox VM ↔ robot) and read-only robot inventory.
+- `config/`: network, CycloneDDS and safety-limit templates (never store secrets).
+- `docs/`: operator guides; `tests/`: hardware-free `pytest` suites.
 
 ## Build, Test, and Development Commands
 
-No build system, package manifest, or automated test runner is configured.
+`pyproject.toml` configures `pytest`; CI (`.github/workflows/ci.yml`) runs `pytest` and `shellcheck`.
+
+- `python3 -m pytest`: run hardware-free tests.
+- `shellcheck scripts/red/*.sh scripts/robot/*.sh`: lint shell scripts.
 
 - `python3 -m http.server 8000 --bind 127.0.0.1`: optional preview server from the repository root. Open `http://127.0.0.1:8000/fases/diagramas/contexto.html` to review a diagram.
 - `git diff --check`: check unstaged changes for whitespace errors.
@@ -32,7 +38,7 @@ Validation is currently manual; there is no testing framework or coverage thresh
 
 ## Commit & Pull Request Guidelines
 
-The repository has no commits yet, so no historical convention exists. Recommended messages are short and imperative, for example `docs: clarify stage 1 requirements`. Keep changes focused. PR descriptions should state the purpose, affected reports, validation performed, and related Beads issue; include screenshots for visual changes.
+Recommended messages are short and imperative, for example `docs: clarify stage 1 requirements`. Keep changes focused. PR descriptions should state the purpose, affected reports, validation performed, and related Beads issue; include screenshots for visual changes.
 
 ## Agent-Specific Instructions
 

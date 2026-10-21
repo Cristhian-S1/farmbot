@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Plantilla de CycloneDDS para la PC o VM. Reemplazar enp0s8 por la interfaz conectada al robot
+  (en VirtualBox, el adaptador puente). Uso: export CYCLONEDDS_URI=file://$PWD/config/cyclonedds.xml
+  No modificar el cyclonedds.xml del dock con esta plantilla.
+-->
+<CycloneDDS xmlns="https://cdds.io/config">
+  <Domain id="any">
+    <General>
+      <Interfaces>
+        <NetworkInterface name="enp0s8" priority="default" multicast="default" />
+      </Interfaces>
+    </General>
+  </Domain>
+</CycloneDDS>

@@ -4,3 +4,16 @@
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# Herramientas locales
+.codegraph/
+.serena/
+.claude/
+CLAUDE.md
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.ruff_cache/
