@@ -4,3 +4,4 @@
 {"id":"int-0bc6b53e","kind":"field_change","created_at":"2026-10-21T20:59:06.992623429Z","actor":"Cristhian-S1","issue_id":"sabueso-cjx.36","extra":{"field":"status","new_value":"in_progress","old_value":"open"}}
 {"id":"int-13493913","kind":"field_change","created_at":"2026-10-21T20:59:07.368199463Z","actor":"Cristhian-S1","issue_id":"sabueso-cjx.35","extra":{"field":"status","new_value":"in_progress","old_value":"open"}}
 {"id":"int-8f32b8ca","kind":"field_change","created_at":"2026-10-21T20:59:14.997868933Z","actor":"Cristhian-S1","issue_id":"sabueso-cjx.31","extra":{"field":"status","new_value":"in_progress","old_value":"open"}}
+{"id":"int-0d9bad2f","kind":"field_change","created_at":"2026-10-21T20:59:51.020498852Z","actor":"Cristhian-S1","issue_id":"sabueso-cjx.14","extra":{"field":"status","new_value":"closed","old_value":"open","reason":"Repositorio privado https://github.com/Cristhian-S1/sabueso con estructura, README y CI."}}
