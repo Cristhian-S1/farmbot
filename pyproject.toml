@@ -3,7 +3,7 @@ name = "sabueso-robot"
 version = "0.1.0"
 description = "Software de Sabueso para el dock del Unitree Go2 EDU"
 requires-python = ">=3.8"
-dependencies = []
+dependencies = ["PyYAML>=5.3"]
 
 [project.optional-dependencies]
 # unitree_sdk2py se instala desde su repositorio (requiere CycloneDDS 0.10.2); ver docs/manual_instalacion.md
