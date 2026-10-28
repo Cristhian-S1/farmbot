@@ -124,10 +124,10 @@ Los nombres `enp0s3` y `enp0s8` son los habituales de VirtualBox para los adapta
 **Procedimiento resumido (tareas F1.0–F1.5):**
 
 1. Con la VM apagada, configurar el adaptador 1 en NAT y el adaptador 2 en puente sobre la NIC Ethernet conectada al robot, con política promiscua "Permitir todo".
-2. Arrancar la VM y fijar la IP de la interfaz puente: `sudo scripts/red/pc_configurar_interfaz_robot.sh --lan enp0s8`.
-3. Activar el NAT dentro de la VM: `sudo scripts/red/pc_compartir_internet.sh --lan enp0s8 --wan enp0s3`.
+2. Arrancar la VM y fijar la IP de la interfaz puente: `sudo terrestre/scripts/red/pc_configurar_interfaz_robot.sh --lan enp0s8`.
+3. Activar el NAT dentro de la VM: `sudo terrestre/scripts/red/pc_compartir_internet.sh --lan enp0s8 --wan enp0s3`.
 4. En el dock, por SSH: `sudo ./dock_salida_internet.sh --gw 192.168.123.222` (ruta por defecto y DNS).
-5. Verificar desde la VM: `scripts/red/verificar_red.sh --lan enp0s8`.
+5. Verificar desde la VM: `terrestre/scripts/red/verificar_red.sh --lan enp0s8`.
 
 ### 2.4. Escenario B: robot autónomo, sin PC conectada por cable
 
@@ -236,7 +236,7 @@ Las versiones se verificaron en Context7 o en la documentación oficial al 21 de
 
 | ID | Tarea | Depende de | Responsable | Criterio de aceptación |
 | --- | --- | --- | --- | --- |
-| F0.1 | Inventariar el robot por SSH, solo lectura: `ip -br addr`, `ip route`, `cat /etc/nv_tegra_release`, `lsb_release -a`, `nvidia-smi`/`tegrastats`, `lsusb`, contenido de `cyclonedds.xml`, versión de firmware del cuerpo en la app | — | CS (agente: CX) | Archivo `docs/inventario_robot.md` sin secretos, con cada dato **por verificar** de la sección 7 resuelto o justificado |
+| F0.1 | Inventariar el robot por SSH, solo lectura: `ip -br addr`, `ip route`, `cat /etc/nv_tegra_release`, `lsb_release -a`, `nvidia-smi`/`tegrastats`, `lsusb`, contenido de `cyclonedds.xml`, versión de firmware del cuerpo en la app | — | CS (agente: CX) | Archivo `terrestre/docs/inventario_robot.md` sin secretos, con cada dato **por verificar** de la sección 7 resuelto o justificado |
 | F0.2 | Confirmar la variante del dock (Orin Nano/NX), la cámara de profundidad y el LiDAR de navegación | F0.1 | CH | Tabla con número de serie de módulo, modelo de cámara y LiDAR |
 | F0.3 | Respaldar la imagen del dock (o registrar el enlace a la imagen de fábrica [U3]) antes de cualquier cambio | F0.1 | CS | Respaldo verificado (suma de comprobación) o decisión documentada de usar la imagen oficial |
 | F0.4 | Crear el repositorio GitHub con la estructura de la sección 4.7 | — | CS (agente: OC) | Repositorio público o privado con README, licencia y estructura; enlace en el informe de la Parte 2 |
@@ -246,12 +246,12 @@ Las versiones se verificaron en Context7 o en la documentación oficial al 21 de
 | ID | Tarea | Depende de | Responsable | Criterio de aceptación |
 | --- | --- | --- | --- | --- |
 | F1.0 | Preparar la VM Ubuntu 22.04 en VirtualBox: adaptador 1 en NAT, adaptador 2 en puente sobre la NIC Ethernet del robot, política promiscua "Permitir todo", Guest Additions (sección 2.3) | — | CS | `ip -br link` muestra dos interfaces; `enp0s3` obtiene DHCP y sale a internet (`getent hosts github.com`) |
-| F1.1 | Fijar la IP de la interfaz puente de la VM en 192.168.123.222/24 con `scripts/red/pc_configurar_interfaz_robot.sh` (perfil `go2-lan`, sin puerta de enlace, `never-default`) | F1.0, F0.1 | CS | `ping -c 20 192.168.123.18` y `.161` con 0 % de pérdida y RTT medio < 2 ms |
+| F1.1 | Fijar la IP de la interfaz puente de la VM en 192.168.123.222/24 con `terrestre/scripts/red/pc_configurar_interfaz_robot.sh` (perfil `go2-lan`, sin puerta de enlace, `never-default`) | F1.0, F0.1 | CS | `ping -c 20 192.168.123.18` y `.161` con 0 % de pérdida y RTT medio < 2 ms |
 | F1.2 | Llaves SSH: `ssh-keygen -t ed25519`, `ssh-copy-id`, cambiar la contraseña por defecto, y luego `PasswordAuthentication no` | F1.1 | CS | Login sin contraseña; intento con contraseña rechazado; contraseña nueva guardada fuera del repositorio |
-| F1.3 | Script `scripts/red/pc_compartir_internet.sh` (NAT idempotente con interfaces como parámetros, modo `--quitar`) | F1.1 | CX → revisa CS | `shellcheck` sin errores; ejecutar dos veces no duplica reglas; `--quitar` restaura el estado |
-| F1.4 | Script `scripts/red/dock_salida_internet.sh` (ruta por defecto vía PC y DNS con `nmcli`, sin tocar la IP .18 ni `cyclonedds.xml`) | F1.3 | CX → revisa CS | Desde el dock: `ping 1.1.1.1`, `getent hosts github.com` y `apt update` correctos |
+| F1.3 | Script `terrestre/scripts/red/pc_compartir_internet.sh` (NAT idempotente con interfaces como parámetros, modo `--quitar`) | F1.1 | CX → revisa CS | `shellcheck` sin errores; ejecutar dos veces no duplica reglas; `--quitar` restaura el estado |
+| F1.4 | Script `terrestre/scripts/red/dock_salida_internet.sh` (ruta por defecto vía PC y DNS con `nmcli`, sin tocar la IP .18 ni `cyclonedds.xml`) | F1.3 | CX → revisa CS | Desde el dock: `ping 1.1.1.1`, `getent hosts github.com` y `apt update` correctos |
 | F1.5 | Persistencia: `iptables-persistent` en la PC; en el dock, perfil NetworkManager con ruta de métrica alta | F1.4 | CS | Tras reiniciar PC y dock, F1.4 sigue pasando sin intervención |
-| F1.6 | Script `scripts/red/verificar_red.sh` (ping, DNS, rutas, `ros2 topic list` opcional; salida PASA/FALLA) | F1.4 | OC → revisa CX | Detecta una ruta faltante o un DNS vacío provocados a propósito |
+| F1.6 | Script `terrestre/scripts/red/verificar_red.sh` (ping, DNS, rutas, `ros2 topic list` opcional; salida PASA/FALLA) | F1.4 | OC → revisa CX | Detecta una ruta faltante o un DNS vacío provocados a propósito |
 | F1.7 | Sincronizar la hora del dock (`chrony` contra la PC o NTP) | F1.4 | CS | Desfase < 100 ms respecto de la PC |
 | F1.8 | Piloto B3: adaptador USB Wi-Fi en el dock, conexión a hotspot, ruta con métrica que no interfiera con eth0 | F1.5, D3 | CH (agente: CX) | El dock sale a internet sin la PC; DDS sigue en eth0 (`ros2 topic list` o SDK responden) |
 | F1.9 | Prueba de cobertura en el invernadero (RSSI, `mtr`, `iperf3`) en las hileras del piloto | F1.8 | CH | Mapa simple con RSSI y latencia por hilera; insumo para D3 |
@@ -263,7 +263,7 @@ Las versiones se verificaron en Context7 o en la documentación oficial al 21 de
 | F2.1 | PC: Ubuntu 22.04, ROS 2 Humble, `rmw_cyclonedds_cpp`, `venv` con `unitree_sdk2_python` y CycloneDDS 0.10.2 | F1.1 | CS (agente: CX) | `python -c "import unitree_sdk2py"` correcto; `ros2 doctor` sin errores críticos |
 | F2.2 | Dock: CycloneDDS 0.10.2 y `unitree_sdk2_python` en un `venv` propio | F1.4 | CS (agente: CX) | Importación correcta en el dock |
 | F2.3 | Prueba de solo lectura: suscribirse al estado del robot (`rt/sportmodestate`, `rt/lowstate`) desde la PC y desde el dock con `ChannelFactoryInitialize(0, "<interfaz>")` | F2.1, F2.2 | CS | 60 s de mensajes recibidos; frecuencia medida y registrada; batería legible |
-| F2.4 | Documentar la separación de entornos SDK2 / ROS 2 (no cargar ROS en la terminal del SDK [U2]) | F2.3 | SO | Sección en `docs/entorno.md` revisada por OR |
+| F2.4 | Documentar la separación de entornos SDK2 / ROS 2 (no cargar ROS en la terminal del SDK [U2]) | F2.3 | SO | Sección en `terrestre/docs/entorno.md` revisada por OR |
 | F2.5 | Captura de prueba con `VideoClient.GetImageSample()` y guardado con metadatos | F2.3 | CS | 10 imágenes JPEG válidas con marca de tiempo; tiempo medio por captura registrado |
 | F2.6 | Manual de instalación reproducible (base para RFN7) | F2.1–F2.5 | SO → revisa OC (rutas y comandos) | Un integrante instala desde cero siguiendo solo el manual; tiempo registrado |
 
@@ -293,7 +293,7 @@ Las versiones se verificaron en Context7 o en la documentación oficial al 21 de
 | ID | Tarea | Depende de | Responsable | Criterio de aceptación |
 | --- | --- | --- | --- | --- |
 | F5.1 | Incorporar herramientas, alcance y despliegue al informe de la Parte 2 | F2.6, D1–D5 | SO → revisa OR | Cubre los puntos 1, 2, 3 y 8 de la Parte 2 de la rúbrica |
-| F5.2 | Diagrama de despliegue (PC, dock, control, router, servidor) en `fases/diagramas/` (HTML + SVG coherentes) | D1, D3 | SO (contenido) + OC (sintaxis SVG y enlaces) | Sin etiquetas recortadas; mismo contenido en HTML y SVG |
+| F5.2 | Diagrama de despliegue (PC, dock, control, router, servidor) en `documentacion/fases/diagramas/` (HTML + SVG coherentes) | D1, D3 | SO (contenido) + OC (sintaxis SVG y enlaces) | Sin etiquetas recortadas; mismo contenido en HTML y SVG |
 | F5.3 | Verificación de enlaces, rutas e imágenes de todos los documentos | F5.1, F5.2 | OC | Cero enlaces rotos o rutas inexistentes |
 | F5.4 | Revisión cruzada final contra la rúbrica | F5.3 | SO + OR | Lista de verificación completa; observaciones cerradas |
 
@@ -317,7 +317,7 @@ La regla de oro es no tocar la configuración de red ni el `cyclonedds.xml` del 
 2. Revisar el robot: batería cargada (> 50 % para pruebas y > 80 % para recorridos; son precondiciones del procedimiento, distintas de los límites de software de 30 % para iniciar y 25 % para detener de la sección 4.4), fijación del dock y de los accesorios, y patas libres.
 3. Encender el control remoto, y después el robot con su secuencia de botones del manual [U4].
 4. Esperar a que el robot se ponga de pie y estabilice. Comprobar con el control remoto que responde.
-5. En la PC, ejecutar `scripts/red/verificar_red.sh`, que debe dar PASA.
+5. En la PC, ejecutar `terrestre/scripts/red/verificar_red.sh`, que debe dar PASA.
 6. Iniciar la telemetría (solo lectura) y confirmar batería y estado.
 7. Iniciar la misión: el limitador queda configurado antes de habilitar `movimiento`.
 
@@ -372,35 +372,41 @@ PC del operador / servidor         Dock Jetson (192.168.123.18)              Con
 ```text
 sabueso/
 ├── README.md
-├── config/
-│   ├── red.yaml                  # interfaces y direcciones (sin secretos)
-│   ├── limites_seguridad.yaml    # velocidades, distancias, umbrales de batería
-│   └── cyclonedds.xml            # plantilla ligada a la interfaz del robot
-├── scripts/
-│   └── red/
-│       ├── pc_compartir_internet.sh
-│       ├── dock_salida_internet.sh
-│       └── verificar_red.sh
-├── robot/                        # se ejecuta en el dock (S1)
-│   └── sabueso_robot/
-│       ├── conexion.py           # ChannelFactoryInitialize y selección de interfaz
-│       ├── seguridad/            # limitador, watchdog y estado de paro (única puerta al movimiento)
-│       ├── movimiento/           # primitivas: avanzar por hilera, girar, detener
-│       ├── mision/               # recorrido por hileras y zonas; máquina de estados (Figura 4)
-│       ├── telemetria/           # estado, batería, temperatura → SQLite
-│       ├── captura/              # cámara frontal o D435i, metadatos hilera/zona/recorrido
-│       └── sincronizacion/       # cola local y envío diferido con reintentos
-├── servidor/                     # S2–S4; tecnologías según la Parte 2
-│   ├── analisis/
-│   ├── registro/
-│   └── web/
-├── tests/
-│   ├── robot/                    # pruebas sin hardware (simulan clientes del SDK)
-│   └── servidor/
-└── docs/
-    ├── inventario_robot.md
-    ├── entorno.md
-    └── manual_instalacion.md
+├── documentacion/                # contexto del proyecto
+│   ├── fases/
+│   │   ├── plan_conectividad_y_entorno.md
+│   │   ├── fase1_informe_etapa_1.md
+│   │   ├── fase_0_problematica_requisitos.md
+│   │   ├── rubrica_de_etapas_informes.md
+│   │   └── diagramas/
+│   └── planeacion/
+├── terrestre/                    # equipo terrestre (Go2)
+│   ├── README.md
+│   ├── pyproject.toml
+│   ├── config/
+│   │   ├── red.yaml              # interfaces y direcciones (sin secretos)
+│   │   ├── limites_seguridad.yaml
+│   │   └── cyclonedds.xml
+│   ├── deploy/
+│   ├── docs/
+│   ├── robot/                    # se ejecuta en el dock (S1)
+│   │   └── sabueso_robot/
+│   │       ├── conexion.py
+│   │       ├── seguridad/        # única puerta al movimiento
+│   │       ├── movimiento/
+│   │       ├── mision/
+│   │       ├── telemetria/
+│   │       ├── captura/
+│   │       └── sincronizacion/
+│   ├── scripts/
+│   │   ├── red/
+│   │   └── robot/
+│   ├── servidor/                 # S2–S4; pendiente de decisión D1
+│   └── tests/
+│       ├── robot/                # pruebas sin hardware
+│       └── servidor/
+├── aereo/                        # equipo aéreo
+└── interfaz/                     # interfaz común
 ```
 
 Responsabilidades:
@@ -410,7 +416,7 @@ Responsabilidades:
 - `captura` nunca asigna una zona inventada; una captura sin zona se marca para revisión.
 - `sincronizacion` hace que una misión con la red caída conserve la evidencia (CU1).
 
-Las pruebas de `robot/` se ejecutan sin hardware sustituyendo los clientes del SDK por dobles de prueba.
+Las pruebas de `terrestre/robot/` se ejecutan sin hardware sustituyendo los clientes del SDK por dobles de prueba.
 
 ---
 
@@ -446,9 +452,9 @@ Las pruebas de `robot/` se ejecutan sin hardware sustituyendo los clientes del S
 
 | Subagente | Tareas | Entradas | Entregable | Criterio de aceptación | Revisión del orquestador |
 | --- | --- | --- | --- | --- | --- |
-| Sonnet 5.5 | F2.4, F2.6, F5.1, F5.2 (contenido), F5.4; borradores de D1–D10 para discusión | `fases/fase1_informe_etapa_1.md`, `fases/fase_0_problematica_requisitos.md`, `fases/rubrica_de_etapas_informes.md`, este plan; Context7 (`/unitreerobotics/unitree_ros2`, `/unitreerobotics/unitree_sdk2_python`); Exa (support.unitree.com) | Secciones Markdown en español, con fuentes y fechas | Cada afirmación técnica cita una fuente; se respeta la numeración existente; cumple los puntos de la rúbrica | Al terminar cada sección y antes de integrarla al informe |
+| Sonnet 5.5 | F2.4, F2.6, F5.1, F5.2 (contenido), F5.4; borradores de D1–D10 para discusión | `documentacion/fases/fase1_informe_etapa_1.md`, `documentacion/fases/fase_0_problematica_requisitos.md`, `documentacion/fases/rubrica_de_etapas_informes.md`, este plan; Context7 (`/unitreerobotics/unitree_ros2`, `/unitreerobotics/unitree_sdk2_python`); Exa (support.unitree.com) | Secciones Markdown en español, con fuentes y fechas | Cada afirmación técnica cita una fuente; se respeta la numeración existente; cumple los puntos de la rúbrica | Al terminar cada sección y antes de integrarla al informe |
 | Codex (GPT 6.1 Sol) | F0.1 (guion de inventario de solo lectura), F1.3, F1.4, F1.8 (guion), F2.1, F2.2, F3.1–F3.5 | Este plan (secciones 4.1, 4.4 y 4.7); Context7 (`unitree_sdk2_python`, `unitree_ros2`, `unitree_sdk2`); Agent Reach con GitHub (issues de `unitreerobotics/*`) | Scripts y código con pruebas en una rama y PR | `pytest`, `shellcheck` y `ruff` sin errores; scripts idempotentes; ninguna llamada de movimiento fuera de `seguridad` | Revisión de cada PR; F3.1 y F3.5 exigen además aprobación de CH y CS |
-| OpenCode (DeepSeek v4.1 flash) | F0.4 (estructura), F1.6, F3.6, F5.2 (sintaxis SVG), F5.3; barridos de Exa y Agent Reach para actualizar fuentes | Estructura de la sección 4.7; archivos de `fases/` y `fases/diagramas/`; lista de URLs de la sección 8 | Plantillas, informe de enlaces y rutas, lista de fuentes actualizadas con fecha | Cero enlaces rotos; plantillas válidas; sin secretos | Revisión por muestreo de cada entrega |
+| OpenCode (DeepSeek v4.1 flash) | F0.4 (estructura), F1.6, F3.6, F5.2 (sintaxis SVG), F5.3; barridos de Exa y Agent Reach para actualizar fuentes | Estructura de la sección 4.7; archivos de `documentacion/fases/` y `documentacion/fases/diagramas/`; lista de URLs de la sección 8 | Plantillas, informe de enlaces y rutas, lista de fuentes actualizadas con fecha | Cero enlaces rotos; plantillas válidas; sin secretos | Revisión por muestreo de cada entrega |
 
 ### 6.3. Validación cruzada (dos subagentes sobre el mismo resultado)
 
@@ -546,7 +552,7 @@ Consultadas el 21 de octubre de 2026 con Exa, Context7 y GitHub (CLI `gh`, servi
 
 **Proyecto**
 
-- [R0] Rúbrica de etapas e informes de Proyecto IV (31/08/2026), `fases/rubrica_de_etapas_informes.md`.
+- [R0] Rúbrica de etapas e informes de Proyecto IV (31/08/2026), `documentacion/fases/rubrica_de_etapas_informes.md`.
 
 **Contradicciones y matices entre fuentes**
 

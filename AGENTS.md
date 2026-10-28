@@ -4,16 +4,18 @@
 
 This repository documents **Sabueso**, a Proyecto IV system for monitoring tomato crops. Two teams share it: a ground team (Unitree Go2 robot) and an aerial team.
 
-- `documentacion/`: project context only. `planeacion/` holds course instructions and semester planning; `fases/` holds requirements, stage reports and assessment rubrics (see `fase1_informe_etapa_1.md` for the current stage scope); `fases/diagramas/` holds standalone HTML diagrams with SVG assets in `svg/`.
-- `terrestre/`: ground robot software (our team). Currently empty.
+- `documentacion/`: project context only. `documentacion/planeacion/` holds course instructions and semester planning; `documentacion/fases/` holds requirements, stage reports and assessment rubrics (see `fase1_informe_etapa_1.md` for the current stage scope); `documentacion/fases/diagramas/` holds standalone HTML diagrams with SVG assets in `svg/`.
+- `terrestre/`: ground robot software (our team): `config/`, `deploy/`, `docs/`, `robot/`, `scripts/`, `tests/` and `pyproject.toml`.
 - `aereo/`: aerial system (the other team). Currently empty.
 - `interfaz/`: user interface shared by both systems. Currently empty.
 - `.beads/`: issue-tracking data; `.agents/skills/beads/`: local workflow instructions.
 
 ## Build, Test, and Development Commands
 
-CI (`.github/workflows/ci.yml`) only checks whitespace for now; each team adds its own build and test jobs when its folder gets code.
+CI (`.github/workflows/ci.yml`) checks whitespace and runs the ground team's `pytest` and `shellcheck` jobs.
 
+- `cd terrestre && python3 -m pytest`: run the hardware-free tests.
+- `shellcheck terrestre/scripts/red/*.sh terrestre/scripts/robot/*.sh`: lint the ground team's shell scripts.
 - `python3 -m http.server 8000 --bind 127.0.0.1`: optional preview server from the repository root. Open `http://127.0.0.1:8000/documentacion/fases/diagramas/contexto.html` to review a diagram.
 - `git diff --check`: check unstaged changes for whitespace errors.
 - `bd prime`: load the repository's Beads workflow guidance.
@@ -26,7 +28,7 @@ Follow surrounding HTML/CSS indentation, generally two spaces. Reuse existing co
 
 ## Testing Guidelines
 
-Validation of documentation is manual. Preview changed Markdown and HTML, verify links and image paths, and inspect SVG labels for clipping or overlap. Check report content against `documentacion/fases/rubrica_de_etapas_informes.md`. Treat proposed software acceptance metrics as requirements, not executed tests.
+Validation of documentation is manual. Preview changed Markdown and HTML, verify links and image paths, and inspect SVG labels for clipping or overlap. Check report content against `documentacion/fases/rubrica_de_etapas_informes.md`. The ground software has hardware-free `pytest` tests in `terrestre/tests/` and `shellcheck` for its scripts; run both from `terrestre/` before committing. Treat proposed software acceptance metrics as requirements, not executed tests.
 
 ## Commit & Pull Request Guidelines
 

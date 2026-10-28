@@ -6,9 +6,20 @@ on:
 
 jobs:
   # Los .md usan dos espacios finales como salto de línea y se excluyen.
-  # Cada equipo agrega aquí sus pruebas cuando terrestre/, aereo/ o interfaz/ tengan código.
   espacios:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - run: git diff --check "$(git hash-object -t tree /dev/null)" HEAD -- . ':!*.md'
+
+  pruebas-terrestre:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+      - run: python -m pip install pytest PyYAML
+      - run: python -m pytest
+        working-directory: terrestre
+      - run: shellcheck terrestre/scripts/red/*.sh terrestre/scripts/robot/*.sh
