@@ -1,9 +1,0 @@
-# Configuración del software de Sabueso en el dock (sabueso_robot.config.ConfigRobot).
-# Ruta alternativa: variable de entorno SABUESO_CONFIG. No guardar secretos aquí.
-interfaz_dds: eth0                       # interfaz del dock con 192.168.123.18 (por verificar, V1)
-dominio_dds: 0
-directorio_datos: /home/unitree/sabueso_datos
-topico_sport: rt/sportmodestate          # por verificar en el robot; algunos ejemplos usan rt/sportstate
-topico_low: rt/lowstate
-url_servidor: null                       # pendiente de la decisión D1
-timeout_rpc_s: 3.0
