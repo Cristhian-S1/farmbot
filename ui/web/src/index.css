@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: #222;
+  background: #fafafa;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 1.3rem;
+}
+
+.error {
+  color: #b00020;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+td img {
+  width: 120px;
+  height: auto;
+}

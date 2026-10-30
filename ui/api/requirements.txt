@@ -1,0 +1,4 @@
+# Flask 3.0 es la última versión compatible con Python 3.8 (dock del Go2),
+# por si la web corre en el robot durante las pruebas.
+Flask>=3.0,<3.1
+Werkzeug>=3.0,<3.1
