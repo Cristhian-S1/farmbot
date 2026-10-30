@@ -40,7 +40,16 @@ cd ui/web && npm run build
 cd ../api && python3 app.py
 ```
 
-La API sirve la web compilada (`web/dist`) en `http://<equipo>:5000`. El robot envía los registros a la dirección definida en `UI_URL` de `src/config.py` o en la variable `SABUESO_UI_URL`.
+La API sirve la web compilada (`web/dist`) en `http://<equipo>:5000`.
+
+En el robot, `scripts/subir_al_robot.sh` compila la web y copia `api/` y `web/dist/` a `~/Workspace/farmbot/ui`, sin tocar `ui/datos`. Ahí se ejecuta con el entorno que tiene Flask:
+
+```bash
+cd ~/Workspace/farmbot/ui/api
+../../.venv/bin/python app.py
+```
+
+El robot envía los registros a la dirección definida en `UI_URL` de `src/config.py` o en la variable `SABUESO_UI_URL`.
 
 | Variable | Valor por defecto |
 | --- | --- |

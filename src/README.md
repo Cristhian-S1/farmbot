@@ -26,7 +26,7 @@ El repositorio se clona y actualiza en la PC; en el dock no se guardan credencia
 scripts/subir_al_robot.sh
 ```
 
-Queda en `~/Workspace/farmbot/src` del dock.
+Copia `src/` y la web del cliente (`ui/api` y `ui/web/dist`, que compila antes con `npm`) a `~/Workspace/farmbot` del dock. No toca `.venv` ni los datos del dock.
 
 ## Iniciar un recorrido
 
