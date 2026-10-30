@@ -14,3 +14,6 @@ DATOS_DIR = os.path.expanduser(os.environ.get("SABUESO_DATOS", "~/Workspace/farm
 PENDIENTES_DIR = os.path.join(DATOS_DIR, "pendientes")
 
 CALIDAD_JPEG = 80
+
+# Transmisión en vivo de la cámara (python3 -m transmision).
+TRANSMISION_PUERTO = 8080

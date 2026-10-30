@@ -10,6 +10,7 @@ Software del robot Unitree Go2 EDU que corre en el dock Jetson (192.168.123.18):
 | `camara/` | Lectura de la cámara frontal del Go2 |
 | `deteccion/` | Análisis visual de maleza y frutos (modelo pendiente) |
 | `registro/` | Envío de los registros a `ui/`, con cola local si la web no responde |
+| `transmision/` | Video en vivo de la cámara para la web del cliente |
 | `config.py` | Cámara, dirección de la web y carpeta de datos |
 
 Flujo: `camara` → `deteccion` → `registro` → HTTP `POST /api/registros` → `ui/`.
@@ -38,6 +39,23 @@ SABUESO_UI_URL=http://<equipo-de-ui>:5000 python3 -m recorrido --hilera 1
 ```
 
 `Ctrl+C` termina el recorrido. Los registros que no se pudieron enviar quedan en `~/Workspace/farmbot/datos/pendientes/` y se reenvían en el siguiente envío.
+
+## Transmisión en vivo
+
+En el dock, en otra terminal (puede correr junto a un recorrido):
+
+```bash
+cd ~/Workspace/farmbot/src
+python3 -m transmision
+```
+
+La web del cliente la muestra en la sección "En vivo". También se puede abrir directamente:
+
+| Ruta | Respuesta |
+| --- | --- |
+| `http://192.168.123.18:8080/video` | Video MJPEG |
+| `http://192.168.123.18:8080/foto.jpg` | Último cuadro |
+| `http://192.168.123.18:8080/estado` | FPS y si hay video, en JSON |
 
 ## Pendiente
 

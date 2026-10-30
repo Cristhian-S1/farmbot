@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { obtenerRegistros, urlFoto } from './api'
+import EnVivo from './EnVivo'
 import type { Registro } from './tipos'
 
 const INTERVALO_MS = 5000
@@ -32,7 +33,9 @@ export default function App() {
 
   return (
     <main>
-      <h1>Sabueso - registros del recorrido</h1>
+      <h1>Sabueso</h1>
+      <EnVivo />
+      <h2>Registros del recorrido</h2>
       {error && <p className="error">No se pudo consultar la API: {error}</p>}
       {cargando ? (
         <p>Cargando…</p>

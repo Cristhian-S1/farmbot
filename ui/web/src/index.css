@@ -15,6 +15,30 @@ h1 {
   font-size: 1.3rem;
 }
 
+h2 {
+  font-size: 1.1rem;
+  margin-top: 24px;
+}
+
+.en-vivo img {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  background: #111;
+}
+
+.nota {
+  color: #555;
+  margin: 4px 0;
+}
+
+.sin-senal {
+  padding: 24px;
+  background: #eee;
+  color: #444;
+}
+
 .error {
   color: #b00020;
 }

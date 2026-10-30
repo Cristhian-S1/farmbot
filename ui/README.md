@@ -8,7 +8,7 @@ Web del cliente: recibe los registros que envía el robot durante un recorrido (
 | --- | --- |
 | `api/` | API en Flask: recibe los registros del robot, los guarda y los entrega a la web |
 | `api/almacenamiento.py` | Registros en SQLite y fotos en una carpeta |
-| `web/` | Web en React + TypeScript (Vite) |
+| `web/` | Web en React + TypeScript (Vite): video en vivo del robot y registros |
 | `datos/` | Base de datos y fotos; se crea al iniciar la API y no se sube al repositorio |
 
 Flujo: robot → `POST /api/registros` → `api/` → SQLite y fotos → `GET /api/registros` → `web/`.
@@ -32,6 +32,12 @@ npm run dev
 ```
 
 Abrir `http://localhost:5173`. Vite redirige `/api` y `/fotos` a la API en el puerto 5000.
+
+La sección "En vivo" muestra la transmisión del robot (`python3 -m transmision` en el dock). Por defecto la busca en el puerto 8080 del mismo equipo que sirve la web; si el robot está en otro equipo, definir su dirección al compilar o en desarrollo:
+
+```bash
+VITE_CAMARA_URL=http://192.168.123.18:8080 npm run dev
+```
 
 ## Producción local
 
