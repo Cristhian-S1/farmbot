@@ -18,3 +18,7 @@ __pycache__/
 .venv/
 .ruff_cache/
 opencode.json
+
+# Datos locales de Sabueso (base de datos, fotos y cola del robot)
+ui/datos/
+datos/
