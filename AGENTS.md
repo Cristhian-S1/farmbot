@@ -2,17 +2,16 @@
 
 ## Project Structure & Module Organization
 
-This repository documents **Sabueso**, a Proyecto IV system for monitoring tomato crops. Two teams share it: a ground team (Unitree Go2 robot) and an aerial team.
+This repository documents **Sabueso**, a Proyecto IV system for monitoring tomato crops. It is maintained by a single team (Unitree Go2 ground robot).
 
 - `documentacion/`: project context only. `planeacion/` holds course instructions and semester planning; `fases/` holds requirements, stage reports and assessment rubrics (see `fase1_informe_etapa_1.md` for the current stage scope); `fases/diagramas/` holds standalone HTML diagrams with SVG assets in `svg/`.
-- `terrestre/`: ground robot software (our team). Currently empty.
-- `aereo/`: aerial system (the other team). Currently empty.
-- `interfaz/`: user interface shared by both systems. Currently empty.
+- `src/`: robot and data-processing software. Currently empty.
+- `ui/`: user interface (web consultation platform). Currently empty.
 - `.beads/`: issue-tracking data; `.agents/skills/beads/`: local workflow instructions.
 
 ## Build, Test, and Development Commands
 
-CI (`.github/workflows/ci.yml`) only checks whitespace for now; each team adds its own build and test jobs when its folder gets code.
+CI (`.github/workflows/ci.yml`) only checks whitespace for now; build and test jobs are added when `src/` or `ui/` get code.
 
 - `python3 -m http.server 8000 --bind 127.0.0.1`: optional preview server from the repository root. Open `http://127.0.0.1:8000/documentacion/fases/diagramas/contexto.html` to review a diagram.
 - `git diff --check`: check unstaged changes for whitespace errors.
@@ -30,7 +29,7 @@ Validation of documentation is manual. Preview changed Markdown and HTML, verify
 
 ## Commit & Pull Request Guidelines
 
-Recommended messages are short and imperative, for example `docs: clarify stage 1 requirements`. Keep changes focused and within one team's folder when possible. PR descriptions should state the purpose, affected folders, validation performed, and related Beads issue; include screenshots for visual changes.
+Recommended messages are short and imperative, for example `docs: clarify stage 1 requirements`. Keep changes focused and within one folder when possible. PR descriptions should state the purpose, affected folders, validation performed, and related Beads issue; include screenshots for visual changes.
 
 ## Agent-Specific Instructions
 

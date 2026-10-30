@@ -6,7 +6,7 @@ on:
 
 jobs:
   # Los .md usan dos espacios finales como salto de línea y se excluyen.
-  # Cada equipo agrega aquí sus pruebas cuando terrestre/, aereo/ o interfaz/ tengan código.
+  # Agregar aquí las pruebas cuando src/ o ui/ tengan código.
   espacios:
     runs-on: ubuntu-22.04
     steps:

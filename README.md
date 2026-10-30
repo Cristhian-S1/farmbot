@@ -7,9 +7,8 @@ Sistema de monitoreo preventivo del cultivo de tomate para el predio Pampa Conco
 | Ruta | Contenido |
 | --- | --- |
 | `documentacion/` | Contexto del proyecto: requisitos, informes de etapa, rúbrica, diagramas y planificación del curso |
-| `terrestre/` | Robot terrestre Unitree Go2 EDU (nuestro equipo) |
-| `aereo/` | Sistema aéreo (equipo aéreo) |
-| `interfaz/` | Interfaz de usuario común a ambos sistemas |
+| `src/` | Software del robot Unitree Go2 EDU y del procesamiento de datos |
+| `ui/` | Interfaz de usuario (plataforma web de consulta) |
 
 ## Seguridad
 
