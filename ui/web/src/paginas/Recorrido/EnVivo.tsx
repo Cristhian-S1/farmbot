@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
-import { CAMARA_URL } from './config'
+import type { EstadoCamara } from '../../api/tipos'
+import { Vacio } from '../../componentes/Aviso'
+import Insignia from '../../componentes/Insignia'
+import Tarjeta from '../../componentes/Tarjeta'
+import { CAMARA_URL } from '../../config'
+import './EnVivo.css'
 
 const INTERVALO_MS = 1000
 
-interface EstadoCamara {
-  fps: number
-  video: boolean
-}
-
+/** Video MJPEG de `python3 -m transmision` (puerto 8080 del dock). */
 export default function EnVivo() {
   const [estado, setEstado] = useState<EstadoCamara | null>(null)
   // Cambia cuando vuelve el video, para que la imagen reabra la transmisión.
@@ -40,19 +41,24 @@ export default function EnVivo() {
   }, [])
 
   return (
-    <section className="en-vivo">
-      <h2>En vivo</h2>
+    <Tarjeta
+      titulo="En vivo"
+      extra={
+        estado?.video ? (
+          <Insignia nivel="ok" texto={`${estado.fps} FPS`} />
+        ) : (
+          <Insignia nivel="vacio" texto="Sin señal" />
+        )
+      }
+      pie="Cámara frontal del Go2."
+    >
       {estado?.video ? (
-        <>
-          <img src={`${CAMARA_URL}/video?c=${conexion}`} alt="Video en vivo de la cámara frontal del robot" />
-          <p className="nota">{estado.fps} FPS</p>
-        </>
+        <img className="sb-video" src={`${CAMARA_URL}/video?c=${conexion}`} alt="Video en vivo de la cámara frontal del robot" />
       ) : (
-        <p className="sin-senal">
-          {estado ? 'La transmisión está activa, pero la cámara no envía video.' : 'Sin transmisión del robot.'}
-          {' '}En el robot: <code>cd ~/Workspace/farmbot/src && python3 -m transmision</code>
-        </p>
+        <Vacio icono="camara" titulo={estado ? 'La cámara no envía video' : 'Sin transmisión del robot'}>
+          En el dock: <code>cd ~/Workspace/farmbot/src && python3 -m transmision</code>
+        </Vacio>
       )}
-    </section>
+    </Tarjeta>
   )
 }

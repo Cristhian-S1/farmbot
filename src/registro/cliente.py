@@ -1,7 +1,7 @@
-"""Envío de registros del robot a la web del cliente (ui/).
+"""Envío de capturas del robot a la web del cliente (ui/).
 
-Cada registro es un JSON con la detección y su foto en base64, enviado por
-POST a `<UI_URL>/api/registros`. Si la web no responde, el registro se guarda
+Cada captura es un JSON con la foto en base64 y sus detecciones, enviado por
+POST a `<UI_URL>/api/capturas`. Si la web no responde, el registro se guarda
 en una cola local y se reintenta en el siguiente envío, para no perder evidencia
 cuando se cae la red.
 """
@@ -13,7 +13,8 @@ import urllib.request
 
 class ClienteRegistro:
     def __init__(self, url_ui, pendientes_dir, timeout=5):
-        self.url = url_ui.rstrip("/") + "/api/registros"
+        self.url_ui = url_ui.rstrip("/")
+        self.url = self.url_ui + "/api/capturas"
         self.pendientes_dir = pendientes_dir
         self.timeout = timeout
         os.makedirs(pendientes_dir, exist_ok=True)
@@ -35,9 +36,15 @@ class ClienteRegistro:
                 return
             os.remove(ruta)
 
-    def _enviar(self, registro):
+    def finalizar(self, recorrido_id, estado):
+        """Avisa a la web que el recorrido terminó. Si no responde, la web lo verá en curso."""
+        self.reintentar_pendientes()
+        url = "%s/api/recorridos/%s/fin" % (self.url_ui, recorrido_id)
+        return self._enviar({"estado": estado}, url)
+
+    def _enviar(self, registro, url=None):
         datos = json.dumps(registro).encode()
-        req = urllib.request.Request(self.url, data=datos, headers={"Content-Type": "application/json"})
+        req = urllib.request.Request(url or self.url, data=datos, headers={"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=self.timeout) as r:
                 return 200 <= r.status < 300

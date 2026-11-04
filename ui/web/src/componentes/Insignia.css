@@ -1,0 +1,7 @@
+.sb-badge { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 var(--space-3) 0 var(--space-2); border-radius: var(--radius-pill); font: var(--text-label); white-space: nowrap; }
+.sb-badge .sb-icon { width: 18px; height: 18px; }
+.sb-badge--ok { background: var(--status-ok-soft); color: var(--status-ok-ink); }
+.sb-badge--warn { background: var(--status-warn-soft); color: var(--status-warn-ink); }
+.sb-badge--danger { background: var(--status-danger-soft); color: var(--status-danger-ink); }
+.sb-badge--neutral { background: var(--status-neutral-soft); color: var(--status-neutral-ink); }
+.sb-badge--vacio { background: var(--surface-sunken); color: var(--ink-muted); }

@@ -1,0 +1,19 @@
+.sb-photo { position: relative; border-radius: var(--radius-sm); overflow: hidden; background: var(--sidebar); aspect-ratio: 16 / 9; max-width: 100%; }
+.sb-photo img, .sb-photo svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sb-photo img { object-fit: cover; }
+.sb-photo text { font: var(--text-caption); font-weight: 700; }
+.sb-bbox { fill: none; }
+.sb-bbox-halo { fill: none; stroke: var(--sidebar); opacity: .55; }
+.sb-bbox--ok { stroke: var(--status-ok-soft); }
+.sb-bbox--warn { stroke: var(--status-warn-fill); }
+.sb-bbox--danger { stroke: var(--status-danger); }
+.sb-bbox--neutral { stroke: var(--select-soft); }
+.sb-tag rect { fill: var(--surface); }
+.sb-tag text { fill: var(--ink); }
+.sb-tag--ok rect { fill: var(--status-ok); }
+.sb-tag--ok text { fill: var(--on-brand); }
+.sb-tag--warn rect { fill: var(--status-warn-fill); }
+.sb-tag--danger rect { fill: var(--status-danger); }
+.sb-tag--danger text { fill: var(--on-brand); }
+.sb-photo-cap { position: absolute; left: var(--space-3); bottom: var(--space-3); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--sidebar); color: var(--on-sidebar); font: var(--text-caption); }
+.sb-photo--ausente { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); background: var(--surface-sunken); color: var(--ink-muted); font: var(--text-label); border: 1.5px dashed var(--border-strong); }

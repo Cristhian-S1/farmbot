@@ -1,0 +1,25 @@
+.sb-map { display: block; width: 100%; height: auto; }
+.sb-map text { font-family: var(--font-sans); }
+.sb-map .map-sub { font: var(--text-caption); fill: var(--ink-muted); }
+.sb-map .row-label { font: var(--text-label); fill: var(--ink); }
+.sb-map .row-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 4 4; }
+.sb-map .hatch { fill: var(--status-danger); opacity: .22; }
+.sb-map .cell-hatch { fill: url(#sb-hatch); pointer-events: none; }
+.sb-map .cell { stroke-width: 1.5; }
+.sb-map .cell-title { font: var(--text-label); fill: var(--ink); }
+.sb-map .cell-state { font: var(--text-caption); fill: var(--ink-muted); }
+.sb-map .cell-count { font: var(--text-body-strong); font-variant-numeric: tabular-nums; }
+.sb-map .sel { fill: none; stroke: var(--select); stroke-width: 3; pointer-events: none; }
+
+.sb-map .zone { cursor: pointer; outline: none; }
+.sb-map .zone--ok .cell { fill: var(--status-ok-soft); stroke: var(--status-ok); }
+.sb-map .zone--ok .cell-state { fill: var(--status-ok-ink); }
+.sb-map .zone--warn .cell { fill: var(--status-warn-soft); stroke: var(--status-warn); }
+.sb-map .zone--warn .cell-state, .sb-map .zone--warn .cell-count { fill: var(--status-warn-ink); }
+.sb-map .zone--danger .cell { fill: var(--status-danger-soft); stroke: var(--status-danger); }
+.sb-map .zone--danger .cell-state, .sb-map .zone--danger .cell-count { fill: var(--status-danger-ink); }
+.sb-map .zone--neutral .cell { fill: var(--status-neutral-soft); stroke: var(--status-neutral); }
+.sb-map .zone--neutral .cell-state { fill: var(--status-neutral-ink); }
+.sb-map .zone--vacio .cell { fill: var(--surface-sunken); stroke: var(--border-strong); stroke-dasharray: 5 4; }
+.sb-map .zone:hover .cell { filter: brightness(.97); }
+.sb-map .zone:focus-visible .cell { stroke: var(--select); stroke-width: 3; stroke-dasharray: 6 4; }

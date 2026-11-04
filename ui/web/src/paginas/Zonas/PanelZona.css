@@ -1,0 +1,6 @@
+.sb-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); margin-top: var(--space-3); }
+.sb-thumb { padding: 0; border: 2px solid transparent; border-radius: var(--radius-sm); background: none; cursor: pointer; }
+.sb-thumb .sb-photo { border-radius: 4px; }
+.sb-thumb[aria-pressed="true"] { border-color: var(--select); }
+.sb-thumb:focus-visible { outline: 3px solid var(--select); outline-offset: 2px; }
+.sb-panel-accion { margin-top: var(--space-4); }

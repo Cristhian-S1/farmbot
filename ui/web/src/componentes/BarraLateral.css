@@ -1,0 +1,19 @@
+.sb-sidebar { width: 232px; flex: none; background: var(--sidebar); color: var(--on-sidebar); display: flex; flex-direction: column; padding: var(--space-5) var(--space-4); position: sticky; top: 0; height: 100vh; }
+.sb-brand { display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-2); margin-bottom: var(--space-6); }
+.sb-mark { width: 36px; height: 36px; flex: none; }
+.sb-mark .mark-bg { fill: var(--brand); }
+.sb-mark .mark-fg { fill: var(--on-brand); }
+.sb-wordmark { font: var(--text-heading); font-weight: 700; letter-spacing: .08em; }
+.sb-nav { display: flex; flex-direction: column; gap: var(--space-2); }
+.sb-nav-item { display: flex; align-items: center; gap: var(--space-3); height: 52px; padding: 0 var(--space-3); border-radius: var(--radius-sm); font: var(--text-body-strong); color: var(--on-sidebar); text-decoration: none; }
+.sb-nav-item[aria-current="page"] { background: var(--brand); color: var(--on-brand); }
+.sb-nav-item:not([aria-current="page"]):hover { background: var(--sidebar-active); }
+.sb-nav-item:focus-visible { outline: 3px solid var(--select); outline-offset: 2px; }
+
+@media (max-width: 720px) {
+  .sb-sidebar { width: auto; height: auto; position: static; flex-direction: row; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); overflow-x: auto; }
+  .sb-brand { margin: 0; padding: 0; }
+  .sb-wordmark { display: none; }
+  .sb-nav { flex-direction: row; gap: var(--space-1); }
+  .sb-nav-item { height: 44px; padding: 0 var(--space-3); white-space: nowrap; }
+}

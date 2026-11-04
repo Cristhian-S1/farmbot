@@ -11,7 +11,7 @@ This repository documents **Sabueso**, a Proyecto IV system for monitoring tomat
 
 ## Build, Test, and Development Commands
 
-CI (`.github/workflows/ci.yml`) only checks whitespace for now; build and test jobs are added when `src/` or `ui/` get code.
+CI (`.github/workflows/ci.yml`) checks whitespace, runs the API tests on Python 3.8 and lints and builds the web.
 
 - `python3 -m http.server 8000 --bind 127.0.0.1`: optional preview server from the repository root. Open `http://127.0.0.1:8000/documentacion/fases/diagramas/contexto.html` to review a diagram.
 - `git diff --check`: check unstaged changes for whitespace errors.

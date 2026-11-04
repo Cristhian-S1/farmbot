@@ -1,82 +1,37 @@
-import { useEffect, useState } from 'react'
-import { obtenerRegistros, urlFoto } from './api'
-import EnVivo from './EnVivo'
-import type { Registro } from './tipos'
+import { useState } from 'react'
+import { api } from './api/cliente'
+import BarraLateral from './componentes/BarraLateral'
+import { useConsulta } from './hooks/useConsulta'
+import { useRuta } from './hooks/useRuta'
+import type { PropsPagina } from './paginas/contexto'
+import Historial from './paginas/Historial/Historial'
+import Inicio from './paginas/Inicio/Inicio'
+import Recorrido from './paginas/Recorrido/Recorrido'
+import Zonas from './paginas/Zonas/Zonas'
 
-const INTERVALO_MS = 5000
+const INTERVALO_RECORRIDOS_MS = 5000
 
 export default function App() {
-  const [registros, setRegistros] = useState<Registro[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [cargando, setCargando] = useState(true)
+  const ruta = useRuta()
+  const [recorrido, elegirRecorrido] = useState<string | null>(null)
+  const estructura = useConsulta(api.estructura, [])
+  const recorridos = useConsulta(api.recorridos, [], INTERVALO_RECORRIDOS_MS)
 
-  useEffect(() => {
-    let activo = true
-    const cargar = () =>
-      obtenerRegistros()
-        .then((datos) => {
-          if (activo) {
-            setRegistros(datos)
-            setError(null)
-          }
-        })
-        .catch((e: Error) => activo && setError(e.message))
-        .finally(() => activo && setCargando(false))
-
-    cargar()
-    const id = setInterval(cargar, INTERVALO_MS)
-    return () => {
-      activo = false
-      clearInterval(id)
-    }
-  }, [])
+  const props: PropsPagina = {
+    estructura: estructura.datos,
+    recorridos: recorridos.datos ?? [],
+    recorrido,
+    elegirRecorrido,
+    recargarRecorridos: recorridos.recargar,
+  }
 
   return (
-    <main>
-      <h1>Sabueso</h1>
-      <EnVivo />
-      <h2>Registros del recorrido</h2>
-      {error && <p className="error">No se pudo consultar la API: {error}</p>}
-      {cargando ? (
-        <p>Cargando…</p>
-      ) : registros.length === 0 ? (
-        <p>Sin registros todavía.</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Recorrido</th>
-              <th>Hallazgo</th>
-              <th>Confianza</th>
-              <th>Hilera</th>
-              <th>Zona</th>
-              <th>Foto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {registros.map((r) => (
-              <tr key={r.id}>
-                <td>{r.fecha}</td>
-                <td>{r.recorrido}</td>
-                <td>{r.clase}</td>
-                <td>{Math.round(r.confianza * 100)} %</td>
-                <td>{r.hilera ?? 'sin hilera'}</td>
-                <td>{r.zona ?? 'sin zona'}</td>
-                <td>
-                  {r.foto ? (
-                    <a href={urlFoto(r.foto)} target="_blank" rel="noreferrer">
-                      <img src={urlFoto(r.foto)} alt={`Foto del hallazgo ${r.clase}`} />
-                    </a>
-                  ) : (
-                    'sin foto'
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </main>
+    <div className="sb-frame">
+      <BarraLateral actual={ruta.seccion} />
+      {ruta.seccion === 'inicio' && <Inicio {...props} />}
+      {ruta.seccion === 'zonas' && <Zonas {...props} zona={ruta.id} />}
+      {ruta.seccion === 'recorrido' && <Recorrido {...props} />}
+      {ruta.seccion === 'historial' && <Historial {...props} />}
+    </div>
   )
 }

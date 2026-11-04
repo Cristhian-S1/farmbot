@@ -18,6 +18,10 @@ COLORES = {
 
 
 class Detector:
+    # Se registra con cada captura para saber con qué versión se analizó.
+    nombre = "sin_modelo"
+    version = "0"
+
     def detectar(self, cuadro):
         """Devuelve una lista de Deteccion para un cuadro BGR."""
         return []

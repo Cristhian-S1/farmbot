@@ -1,19 +1,19 @@
 # src
 
-Software del robot Unitree Go2 EDU que corre en el dock Jetson (192.168.123.18): durante un recorrido lee la cámara, detecta maleza y frutos, y registra cada detección en la web del cliente (`ui/`).
+Software del robot Unitree Go2 EDU que corre en el dock Jetson (192.168.123.18): durante un recorrido lee la cámara, detecta maleza, frutos y signos en el follaje, y envía cada captura a la web del cliente (`ui/`).
 
 ## Estructura
 
 | Ruta | Contenido |
 | --- | --- |
-| `recorrido/` | Inicia un recorrido: cámara → detección → registro |
+| `recorrido/` | Recorrido: cámara → detección → envío de capturas |
 | `camara/` | Lectura de la cámara frontal del Go2 |
 | `deteccion/` | Análisis visual de maleza y frutos (modelo pendiente) |
-| `registro/` | Envío de los registros a `ui/`, con cola local si la web no responde |
+| `registro/` | Envío de las capturas a `ui/`, con cola local si la web no responde |
 | `transmision/` | Video en vivo de la cámara para la web del cliente |
-| `config.py` | Cámara, dirección de la web y carpeta de datos |
+| `config.py` | Cámara, dirección de la web, carpeta de datos y cada cuánto se envía una captura sin hallazgos |
 
-Flujo: `camara` → `deteccion` → `registro` → HTTP `POST /api/registros` → `ui/`.
+Flujo: `camara` → `deteccion` → `registro` → HTTP `POST /api/capturas` → `ui/`.
 
 ## Requisitos en el dock
 
@@ -31,14 +31,14 @@ Copia `src/` y la web del cliente (`ui/api` y `ui/web/dist`, que compila antes c
 
 ## Iniciar un recorrido
 
-En el dock:
+Desde la web: sección "Recorrido", elegir hilera y zona y "Iniciar recorrido". La API lanza el mismo comando que se puede usar a mano en el dock:
 
 ```bash
 cd ~/Workspace/farmbot/src
 SABUESO_UI_URL=http://<equipo-de-ui>:5000 python3 -m recorrido --hilera 1
 ```
 
-`Ctrl+C` termina el recorrido. Los registros que no se pudieron enviar quedan en `~/Workspace/farmbot/datos/pendientes/` y se reenvían en el siguiente envío.
+Cada captura es una foto (sin cajas dibujadas) con todas sus detecciones. Si no hay detecciones, igual se envía una captura cada `CAPTURA_ZONA_S` segundos para marcar la zona como observada. `Ctrl+C` o "Detener recorrido" lo terminan y se avisa a la web. Las capturas que no se pudieron enviar quedan en `~/Workspace/farmbot/datos/pendientes/` y se reenvían en el siguiente envío.
 
 ## Transmisión en vivo
 
@@ -49,7 +49,7 @@ cd ~/Workspace/farmbot/src
 python3 -m transmision
 ```
 
-La web del cliente la muestra en la sección "En vivo". También se puede abrir directamente:
+La web del cliente la muestra en la sección "Recorrido". También se puede abrir directamente:
 
 | Ruta | Respuesta |
 | --- | --- |
@@ -59,7 +59,7 @@ La web del cliente la muestra en la sección "En vivo". También se puede abrir 
 
 ## Pendiente
 
-- Modelo de detección en `deteccion/detector.py`: `detectar()` devuelve por ahora una lista vacía, así que no se registra nada.
+- Modelo de detección en `deteccion/detector.py`: `detectar()` devuelve por ahora una lista vacía, así que solo llegan capturas sin hallazgos. Las clases esperadas están en `ui/README.md`.
 - Movimiento del robot por las hileras, solo a través de un módulo de seguridad.
 - Hilera y zona según la posición del robot.
 - Evitar registrar varias veces el mismo hallazgo en cuadros seguidos.
