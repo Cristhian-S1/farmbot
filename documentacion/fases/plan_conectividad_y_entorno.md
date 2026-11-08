@@ -129,6 +129,8 @@ Los nombres `enp0s3` y `enp0s8` son los habituales de VirtualBox para los adapta
 4. En el dock, por SSH: `sudo ./dock_salida_internet.sh --gw 192.168.123.222` (ruta por defecto y DNS).
 5. Verificar desde la VM: `scripts/red/verificar_red.sh --lan enp0s8`.
 
+La versión detallada, con la salida a internet del dock, la puerta de enlace de fábrica y el deshacer, está en [`../guias/guia_virtualbox_robot.md`](../guias/guia_virtualbox_robot.md). Ejecute la verificación sin `sudo` para que use la llave SSH del usuario.
+
 ### 2.4. Escenario B: robot autónomo, sin PC conectada por cable
 
 En este escenario hay que separar dos redes:
@@ -249,7 +251,7 @@ Las versiones se verificaron en Context7 o en la documentación oficial al 21 de
 | F1.1 | Fijar la IP de la interfaz puente de la VM en 192.168.123.222/24 con `scripts/red/pc_configurar_interfaz_robot.sh` (perfil `go2-lan`, sin puerta de enlace, `never-default`) | F1.0, F0.1 | CS | `ping -c 20 192.168.123.18` y `.161` con 0 % de pérdida y RTT medio < 2 ms |
 | F1.2 | Llaves SSH: `ssh-keygen -t ed25519`, `ssh-copy-id`, cambiar la contraseña por defecto, y luego `PasswordAuthentication no` | F1.1 | CS | Login sin contraseña; intento con contraseña rechazado; contraseña nueva guardada fuera del repositorio |
 | F1.3 | Script `scripts/red/pc_compartir_internet.sh` (NAT idempotente con interfaces como parámetros, modo `--quitar`) | F1.1 | CX → revisa CS | `shellcheck` sin errores; ejecutar dos veces no duplica reglas; `--quitar` restaura el estado |
-| F1.4 | Script `scripts/red/dock_salida_internet.sh` (ruta por defecto vía PC y DNS con `nmcli`, sin tocar la IP .18 ni `cyclonedds.xml`) | F1.3 | CX → revisa CS | Desde el dock: `ping 1.1.1.1`, `getent hosts github.com` y `apt update` correctos |
+| F1.4 | Script `scripts/red/dock_salida_internet.sh` (ruta por defecto vía PC y DNS con `nmcli`, sin tocar la IP .18 ni `cyclonedds.xml`) | F1.3 | CX → revisa CS | Desde el dock: `curl -I https://github.com`, `getent hosts github.com` y `apt update` correctos; una sola ruta por defecto vía `192.168.123.222` |
 | F1.5 | Persistencia: `iptables-persistent` en la PC; en el dock, perfil NetworkManager con ruta de métrica alta | F1.4 | CS | Tras reiniciar PC y dock, F1.4 sigue pasando sin intervención |
 | F1.6 | Script `scripts/red/verificar_red.sh` (ping, DNS, rutas, `ros2 topic list` opcional; salida PASA/FALLA) | F1.4 | OC → revisa CX | Detecta una ruta faltante o un DNS vacío provocados a propósito |
 | F1.7 | Sincronizar la hora del dock (`chrony` contra la PC o NTP) | F1.4 | CS | Desfase < 100 ms respecto de la PC |

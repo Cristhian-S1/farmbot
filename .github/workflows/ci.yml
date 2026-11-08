@@ -6,9 +6,23 @@ on:
 
 jobs:
   # Los .md usan dos espacios finales como salto de línea y se excluyen.
-  # Agregar aquí las pruebas cuando src/ o ui/ tengan código.
   espacios:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - run: git diff --check "$(git hash-object -t tree /dev/null)" HEAD -- . ':!*.md'
+
+  red:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck scripts/red/*.sh
+
+  python:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+      - run: python -m compileall -q src ui/api

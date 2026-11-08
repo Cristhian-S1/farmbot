@@ -1,0 +1,2 @@
+# Los scripts se ejecutan en Linux: se guardan y se extraen con LF.
+*.sh text eol=lf
