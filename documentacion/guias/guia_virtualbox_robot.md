@@ -76,7 +76,7 @@ scripts/red/verificar_red.sh --lan enp0s8 --ssh unitree@192.168.123.18
 ping -c 100 192.168.123.18 | tail -1          # registre latencia y variación (V24)
 ```
 
-Todas las pruebas deben decir `PASA`. Ejecútelo sin `sudo`: la comprobación de la regla MASQUERADE aparece como `OMITE` porque requiere root; puede verificarla aparte con `sudo iptables -t nat -S POSTROUTING`. El script comprueba la IP de la interfaz, las rutas, el ping al dock y al control, el DNS, el NAT y, con `--ssh`, que el dock tenga una única ruta por defecto vía `192.168.123.222` y DNS.
+Todas las pruebas deben decir `PASA`, salvo la de la regla MASQUERADE, que aparece como `OMITE` si lo ejecuta sin `sudo` (puede verificarla aparte con `sudo iptables -t nat -S POSTROUTING`). El script comprueba la IP de la interfaz, las rutas, el ping al dock y al control, el DNS, el NAT y, con `--ssh`, que el dock tenga una única ruta por defecto vía `192.168.123.222` y DNS.
 
 El script no prueba DDS porque el software actual (`src/`) usa HTTP. Si trabaja con `unitree_ros2`, compruebe aparte `ros2 topic list` con `RMW_IMPLEMENTATION=rmw_cyclonedds_cpp` y la interfaz `enp0s8`; si la IP funciona pero DDS no, revise primero el nombre de la interfaz y que no haya un entorno ROS cargado en la terminal del SDK.
 
@@ -111,10 +111,12 @@ La ISO de Ubuntu no es la máquina virtual: el sistema, el usuario y las configu
 
 6. Verifique antes de arrancar:
 
-   ```bash
+   ```powershell
    # En Windows, VBoxManage suele estar fuera del PATH:
-   "/c/Program Files/Oracle/VirtualBox/VBoxManage.exe" import sabueso_operador.ova --dry-run
+   & "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" import .\sabueso_operador.ova --dry-run
    ```
+
+   En Linux o macOS: `VBoxManage import sabueso_operador.ova --dry-run`.
 
    `--dry-run` muestra lo que se creará, pero no valida los hashes del manifiesto; esa comprobación ocurre al importar.
 
