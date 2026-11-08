@@ -39,4 +39,6 @@ Recommended messages are short and imperative, for example `docs: clarify stage 
 
 When `.codegraph/` exists, use `codegraph_explore` or `codegraph explore "<question>"` before searching or reading code. If it returns no relevant results, inspect files directly. Do not create an index when absent.
 
+For a code graph that also covers the shell scripts, use `graphify query "<question>"` over `graphify-out/` (built with `graphify extract . --code-only`); rebuild it with `graphify update .` after code changes. Both indexes are local and ignored by Git.
+
 Use Beads for task tracking and persistent memory; consult `.agents/skills/beads/SKILL.md`. Do not commit, push, or synchronize remote data without authorization.
