@@ -1,6 +1,6 @@
 # Guía: VM Ubuntu en VirtualBox para la red del Go2
 
-Esta guía prepara el computador del operador (una VM Ubuntu 22.04 en VirtualBox) para conectarse al Go2 EDU por cable y compartirle internet. Corresponde a las tareas F1.0–F1.6 y a la sección 2.3 de [`../fases/plan_conectividad_y_entorno.md`](../fases/plan_conectividad_y_entorno.md).
+Esta guía prepara el computador del operador (una VM Ubuntu 22.04 en VirtualBox) para conectarse al Go2 EDU por cable y compartirle internet. Cubre la preparación de la VM, la IP fija de la interfaz puente y la salida a internet del dock.
 
 El software del robot está en [`../../src/README.md`](../../src/README.md); esta guía solo cubre la red y la VM.
 
