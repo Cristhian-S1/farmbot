@@ -56,7 +56,7 @@ scp scripts/red/dock_salida_internet.sh unitree@192.168.123.18:~/
 ssh -t unitree@192.168.123.18 'sudo ~/dock_salida_internet.sh --gw 192.168.123.222'
 ```
 
-El dock puede traer una puerta de enlace de fábrica (por ejemplo, `192.168.123.1`). Si se queda, compite con la ruta hacia la VM y puede ganar por métrica. El script la guarda en `/var/lib/sabueso/dock_salida_internet.gateway`, la retira y deja la ruta de la VM con métrica 700. Compruebe que la única ruta por defecto sea la de la VM:
+El dock puede traer una puerta de enlace de fábrica (por ejemplo, `192.168.123.1`). Si se queda, compite con la ruta hacia la VM y puede ganar por métrica. El script guarda el estado anterior completo (gateway, DNS, `never-default`, `ignore-auto-routes` y rutas) en `/var/lib/sabueso/dock_salida_internet/`, desactiva la gateway de fábrica y las rutas automáticas, y deja la ruta de la VM con métrica 700. Funciona tanto si la gateway de fábrica es estática como si llega por DHCP. Compruebe que la única ruta por defecto sea la de la VM:
 
 ```bash
 ssh unitree@192.168.123.18 'ip route show default'
@@ -65,7 +65,7 @@ ssh unitree@192.168.123.18 'ip route show default'
 
 Si aparecen dos rutas por defecto, gana la de menor métrica y el dock puede quedarse sin internet aunque `ping 192.168.123.222` funcione.
 
-Este mecanismo supone que `eth0` está gestionada por NetworkManager y que la puerta de fábrica está en `ipv4.gateway`. Si el dock la recibe por DHCP o la tiene en `ipv4.routes`, el script no puede retirarla: avisa, la verificación final falla y hay que corregir el perfil a mano (`nmcli -t -f DEVICE,STATE device`). Sin NetworkManager solo se aplica una ruta temporal, que no sobrevive al reinicio.
+El script exige NetworkManager y una interfaz con la IP del dock; si no la encuentra, se detiene sin tocar nada. Para revisar lo que guardó: `sudo ./dock_salida_internet.sh --estado`.
 
 En el NAT de VirtualBox, `ping 8.8.8.8` puede fallar aunque `apt` y `git` funcionen. Compruebe con `getent hosts github.com` y `curl -I https://github.com`.
 
@@ -87,7 +87,7 @@ sudo scripts/red/pc_compartir_internet.sh --lan enp0s8 --wan enp0s3 --quitar
 ssh -t unitree@192.168.123.18 'sudo ~/dock_salida_internet.sh --gw 192.168.123.222 --quitar'
 ```
 
-El script del dock restaura la puerta de enlace de fábrica que guardó al aplicarlo. Como el script no guarda la métrica, si lo aplicó con una `--metrica` distinta de 700, use la misma al quitar para que retire la ruta correcta.
+El script del dock restaura la gateway, el DNS y las rutas que guardó al aplicarlo; ya no hace falta repetir `--gw` ni `--metrica`. Si algo falla al aplicar, el script revierte automáticamente al estado anterior y conserva el estado guardado para reintentar. Para verlo antes de quitar: `sudo ./dock_salida_internet.sh --estado`.
 
 ## 7. Compartir la VM con otro operador (OVA)
 
