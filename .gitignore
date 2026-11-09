@@ -8,6 +8,7 @@
 # Herramientas locales
 .codegraph/
 graphify-out/
+.opencode/
 .serena/
 .claude/
 CLAUDE.md
@@ -23,3 +24,9 @@ opencode.json
 # Datos locales de Sabueso (base de datos, fotos y cola del robot)
 ui/datos/
 datos/
+
+# Modelos entrenados: se generan con ml/ y no se versionan
+*.onnx
+*.onnx.json
+*.pt
+*.pth

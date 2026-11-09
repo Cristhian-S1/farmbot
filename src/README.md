@@ -8,7 +8,7 @@ Software del robot Unitree Go2 EDU que corre en el dock Jetson (192.168.123.18):
 | --- | --- |
 | `recorrido/` | Inicia un recorrido: cámara → detección → registro |
 | `camara/` | Lectura de la cámara frontal del Go2 |
-| `deteccion/` | Análisis visual de maleza y frutos (modelo pendiente) |
+| `deteccion/` | Detección de frutos de tomate con un modelo ONNX (entrenado con `ml/`) |
 | `registro/` | Envío de los registros a `ui/`, con cola local si la web no responde |
 | `transmision/` | Video en vivo de la cámara para la web del cliente |
 | `config.py` | Cámara, dirección de la web y carpeta de datos |
@@ -17,7 +17,7 @@ Flujo: `camara` → `deteccion` → `registro` → HTTP `POST /api/registros` �
 
 ## Requisitos en el dock
 
-Python 3.8 y OpenCV con GStreamer, ya instalados en la imagen del dock. No usa paquetes externos.
+Python 3.8 y OpenCV con GStreamer, ya instalados en la imagen del dock. Para detectar hace falta además `onnxruntime` (y NumPy) y el modelo exportado con `ml/exportar.py`: `sabueso.onnx` y `sabueso.onnx.json` en `~/Workspace/farmbot/datos/modelo/` (o la ruta de `SABUESO_MODELO`). Sin modelo, el recorrido arranca pero avisa por stderr y no registra nada; si `SABUESO_MODELO` apunta a un archivo que no existe, falla al iniciar. `SABUESO_UMBRAL` (por defecto 0.5) fija el puntaje mínimo. La compatibilidad de `onnxruntime` con Python 3.8 en la Jetson **no está verificada**; ver `ml/README.md`.
 
 ## Subir el código al robot
 
@@ -59,7 +59,7 @@ La web del cliente la muestra en la sección "En vivo". También se puede abrir 
 
 ## Pendiente
 
-- Modelo de detección en `deteccion/detector.py`: `detectar()` devuelve por ahora una lista vacía, así que no se registra nada.
+- Modelo de detección: el pipeline existe (`ml/`), pero aún no hay un modelo entrenado en serio ni medido en el dock; sin `sabueso.onnx` no se registra nada. Solo detecta `tomate_verde` y `tomate_maduro`; maleza queda pendiente de datos.
 - Movimiento del robot por las hileras, solo a través de un módulo de seguridad.
 - Hilera y zona según la posición del robot.
 - Evitar registrar varias veces el mismo hallazgo en cuadros seguidos.
