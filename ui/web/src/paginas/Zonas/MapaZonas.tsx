@@ -77,7 +77,7 @@ export default function MapaZonas({ zonas, seleccionada, onElegir }: Props) {
             </text>
             {anchoCelda >= ANCHO_MIN_TEXTO && (
               <text className="cell-state" x={cx + 12} y={cy + 50}>
-                {estado.texto}
+                {estado.corto ?? estado.texto}
               </text>
             )}
             {(z.estado === 'revisar_maleza' || z.estado === 'revisar_follaje') && (

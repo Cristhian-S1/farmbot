@@ -85,6 +85,19 @@ class PruebasMapa(BaseApi):
         self.assertEqual(self.zona(mapa, 2, 2)["estado"], "sin_datos")
         self.assertEqual(mapa["capturas_sin_zona"], 1)
 
+    def test_recorridos_cuentan_zonas_como_el_mapa(self):
+        self.cliente.post("/api/capturas", json=captura("1", 1, 1, ["maleza", "follaje_mancha"]))
+        self.cliente.post("/api/capturas", json=captura("2", 1, 1, ["maleza"]))
+        self.cliente.post("/api/capturas", json=captura("3", 1, 2, ["follaje_mancha"]))
+        self.cliente.post("/api/capturas", json=dict(captura("4", 1, 3, ["maleza"]), analisis="pendiente"))
+        self.cliente.post("/api/capturas", json=captura("5", None, None, ["maleza"]))
+        self.cliente.post("/api/capturas", json=captura("6", 2, 1, ["follaje_mancha"], recorrido="R2"))
+        recorridos = {r["id"]: r for r in self.cliente.get("/api/recorridos").get_json()}
+        self.assertEqual(recorridos["R1"]["zonas_maleza"], 1)
+        self.assertEqual(recorridos["R1"]["zonas_follaje"], 1)
+        self.assertEqual(recorridos["R2"]["zonas_maleza"], 0)
+        self.assertEqual(recorridos["R2"]["zonas_follaje"], 1)
+
     def test_ficha_e_historial(self):
         self.cliente.post("/api/capturas", json=captura("1", 1, 1, ["maleza"], recorrido="R1"))
         self.cliente.post("/api/capturas", json=captura("2", 1, 2, [], recorrido="R2", fecha="2026-11-05T10:00:00"))

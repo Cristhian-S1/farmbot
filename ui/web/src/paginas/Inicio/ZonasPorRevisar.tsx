@@ -7,11 +7,18 @@ import { ESTADOS_ZONA } from '../../utilidades/estados'
 import { formatoHora, nombreZona, plural } from '../../utilidades/formato'
 import './ZonasPorRevisar.css'
 
+function frutos(z: ZonaMapa): string {
+  const partes = []
+  if (z.verdes) partes.push(plural(z.verdes, 'fruto verde', 'frutos verdes'))
+  if (z.maduros) partes.push(plural(z.maduros, 'fruto maduro', 'frutos maduros'))
+  return partes.join(' y ')
+}
+
 function resumen(z: ZonaMapa): string {
   const partes = []
   if (z.follaje) partes.push(`${plural(z.follaje, 'signo')} en el follaje`)
   if (z.maleza) partes.push(`${plural(z.maleza, 'detección', 'detecciones')} de maleza`)
-  if (z.verdes || z.maduros) partes.push(`${z.verdes} frutos verdes y ${z.maduros} maduros`)
+  if (z.verdes || z.maduros) partes.push(frutos(z))
   return partes.join(' · ')
 }
 

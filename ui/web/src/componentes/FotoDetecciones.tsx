@@ -48,13 +48,16 @@ export default function FotoDetecciones({ captura, etiquetas = true, leyenda, cl
             const [x1, y1, x2, y2] = d.caja
             const nivel = NIVEL_GRUPO[d.grupo]
             const texto = `${d.nombre} ${porcentaje(d.confianza)}`
+            const anchoEtiqueta = texto.length * 7.4 + 16
+            // La etiqueta se corre a la izquierda si no cabe dentro de la foto.
+            const xEtiqueta = Math.max(0, Math.min(x1, tamano.ancho - anchoEtiqueta * escala))
             return (
               <g key={i}>
                 <rect className="sb-bbox-halo" x={x1} y={y1} width={x2 - x1} height={y2 - y1} strokeWidth={trazo * 2} />
                 <rect className={`sb-bbox sb-bbox--${nivel}`} x={x1} y={y1} width={x2 - x1} height={y2 - y1} strokeWidth={trazo} />
                 {etiquetas && (
-                  <g className={`sb-tag sb-tag--${nivel}`} transform={`translate(${x1} ${Math.max(0, y1 - 26 * escala)}) scale(${escala})`}>
-                    <rect width={texto.length * 7.4 + 16} height="24" rx="3" />
+                  <g className={`sb-tag sb-tag--${nivel}`} transform={`translate(${xEtiqueta} ${Math.max(0, y1 - 26 * escala)}) scale(${escala})`}>
+                    <rect width={anchoEtiqueta} height="24" rx="3" />
                     <text x="8" y="16.5">{texto}</text>
                   </g>
                 )}

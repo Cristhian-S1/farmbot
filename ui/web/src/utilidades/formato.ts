@@ -8,10 +8,14 @@ const fechaHora = new Intl.DateTimeFormat('es-CL', {
   minute: '2-digit',
 })
 const hora = new Intl.DateTimeFormat('es-CL', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+const dia = new Intl.DateTimeFormat('es-CL', { day: '2-digit', month: 'short' })
+const horaCorta = new Intl.DateTimeFormat('es-CL', { hour: '2-digit', minute: '2-digit' })
 
 export const formatoFecha = (iso: string) => fecha.format(new Date(iso))
 export const formatoFechaHora = (iso: string) => fechaHora.format(new Date(iso))
 export const formatoHora = (iso: string) => hora.format(new Date(iso))
+export const formatoDia = (iso: string) => dia.format(new Date(iso))
+export const formatoHoraCorta = (iso: string) => horaCorta.format(new Date(iso))
 
 export function nombreZona(hilera: number | null, zona: number | null): string {
   if (hilera == null || zona == null) return 'Sin zona'

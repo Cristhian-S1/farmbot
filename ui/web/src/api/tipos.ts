@@ -32,6 +32,8 @@ export interface Recorrido {
   zonas: number
   sin_zona: number
   alertas: number
+  zonas_maleza: number
+  zonas_follaje: number
 }
 
 export interface ResumenZona {
@@ -84,7 +86,7 @@ export interface Ficha {
   numero: number
   estado: EstadoZona
   resumen: ResumenZona
-  recorrido: (Omit<Recorrido, 'capturas' | 'zonas' | 'sin_zona' | 'alertas'>) | null
+  recorrido: (Omit<Recorrido, 'capturas' | 'zonas' | 'sin_zona' | 'alertas' | 'zonas_maleza' | 'zonas_follaje'>) | null
   capturas: Captura[]
 }
 

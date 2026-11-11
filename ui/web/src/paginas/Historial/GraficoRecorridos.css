@@ -1,0 +1,48 @@
+.sb-chart { --sb-chart-alto: 200px; --sb-chart-aire: 28px; display: flex; gap: var(--space-2); }
+
+.sb-chart-eje { position: relative; flex: none; width: 20px; height: var(--sb-chart-alto); margin-top: var(--sb-chart-aire); font: var(--text-caption); color: var(--ink-muted); font-variant-numeric: tabular-nums; text-align: right; }
+.sb-chart-eje span { position: absolute; right: 0; transform: translateY(50%); }
+
+.sb-chart-desplazable { flex: 1; min-width: 0; overflow-x: auto; }
+.sb-chart-columnas { position: relative; display: flex; min-width: fit-content; }
+
+.sb-chart-rejilla { position: absolute; top: var(--sb-chart-aire); left: 0; right: 0; height: var(--sb-chart-alto); pointer-events: none; }
+.sb-chart-rejilla i { position: absolute; left: 0; right: 0; height: 1px; background: var(--border); }
+.sb-chart-rejilla i.base { background: var(--border-strong); }
+
+.sb-chart-col { position: relative; flex: 1 0 84px; border-radius: var(--radius-sm); outline-offset: -2px; }
+.sb-chart-col:hover .sb-chart-area, .sb-chart-col:focus .sb-chart-area { background: var(--surface-sunken); }
+.sb-chart-col:focus-visible { outline: 3px solid var(--select); }
+
+.sb-chart-area { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: calc(var(--sb-chart-alto) + var(--sb-chart-aire)); border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.sb-chart-total { position: relative; margin-bottom: var(--space-1); font: var(--text-label); color: var(--ink); font-variant-numeric: tabular-nums; }
+/* box-sizing incluye bordes y separación en el alto, para que la barra coincida con la rejilla. */
+.sb-chart-seg { position: relative; flex: none; display: block; width: 24px; box-sizing: border-box; }
+.sb-chart-total + .sb-chart-seg { border-top-left-radius: 4px; border-top-right-radius: 4px; }
+.sb-chart-seg--danger { background: var(--status-danger); background-clip: padding-box; }
+.sb-chart-seg--danger:not(:last-child) { border-bottom: 2px solid transparent; }
+.sb-chart-seg--warn { background: var(--status-warn-fill); border: 1.5px solid var(--status-warn); border-bottom: 0; }
+
+.sb-chart-x { display: flex; flex-direction: column; align-items: center; padding: var(--space-2) var(--space-1) var(--space-1); font: var(--text-caption); color: var(--ink-muted); white-space: nowrap; }
+.sb-chart-x strong { font: var(--text-label); color: var(--ink); }
+
+/* Al lado de la columna, para no tapar su barra ni su total. */
+.sb-chart-tip { display: none; position: absolute; top: 0; z-index: 2; width: 220px; padding: var(--space-3); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-card); pointer-events: none; }
+.sb-chart-tip--izq { left: calc(100% + var(--space-1)); }
+.sb-chart-tip--der { right: calc(100% + var(--space-1)); }
+.sb-chart-col:hover .sb-chart-tip, .sb-chart-col:focus .sb-chart-tip { display: block; }
+.sb-chart-tip-titulo { font: var(--text-label); color: var(--ink); }
+.sb-chart-tip dl { margin-top: var(--space-2); }
+.sb-chart-tip dl div { display: flex; justify-content: space-between; gap: var(--space-3); font: var(--text-caption); color: var(--ink-muted); padding: 2px 0; }
+.sb-chart-tip dt { display: inline-flex; align-items: center; gap: var(--space-2); }
+.sb-chart-tip dd { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.sb-swatch--barra-warn { background: var(--status-warn-fill); border-color: var(--status-warn); }
+.sb-swatch--barra-danger { background: var(--status-danger); border-color: var(--status-danger); }
+
+/* La tabla de abajo tiene los mismos valores: en una pantalla angosta el recuadro no cabe junto a la columna. */
+@media (max-width: 720px) {
+  .sb-chart-col:hover .sb-chart-tip, .sb-chart-col:focus .sb-chart-tip { display: none; }
+}
+
+.sb-table--compacta th, .sb-table--compacta td { padding: 0 var(--space-3); }

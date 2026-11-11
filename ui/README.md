@@ -23,7 +23,7 @@ La web está dividida en módulos:
 | `api/` | Cliente HTTP y tipos de las respuestas |
 | `hooks/` | `useConsulta` (consultas con actualización periódica) y `useRuta` (navegación por `#/seccion/id`) |
 | `componentes/` | Piezas reutilizables: barra lateral, tarjeta, insignia de estado, indicador, foto con detecciones, selector de recorrido |
-| `paginas/` | Una carpeta por sección: `Inicio`, `Zonas` (mapa, ficha e historial de zona), `Recorrido` (en vivo e iniciar/detener) y `Historial` |
+| `paginas/` | Una carpeta por sección: `Inicio`, `Zonas` (mapa, ficha e historial de zona), `Recorrido` (en vivo e iniciar/detener) y `Historial` (gráfico y tabla de recorridos) |
 | `utilidades/` | Estados de zona y recorrido con su texto y color; formato de fechas |
 | `estilos/` | Tokens (colores, tipografía, espacios) y estilos compartidos |
 
@@ -107,7 +107,7 @@ El recorrido se lanza con el `python3` del sistema, que tiene OpenCV con GStream
 | `POST /api/recorridos` | La web inicia un recorrido: `{"hilera": 2, "zona": 3}` (ambos opcionales) |
 | `GET /api/recorridos/actual` | Si hay un recorrido corriendo y las últimas líneas de su salida |
 | `POST /api/recorridos/actual/detener` | Detiene el recorrido |
-| `GET /api/recorridos` | Recorridos con sus totales, del más reciente al más antiguo |
+| `GET /api/recorridos` | Recorridos con sus totales y zonas por revisar (`zonas_maleza`, `zonas_follaje`), del más reciente al más antiguo |
 | `GET /api/estructura` | Sector, hileras, zonas y catálogo de clases |
 | `GET /api/mapa?recorrido=<id>` | Estado y conteos de cada zona; sin `recorrido`, el último |
 | `GET /api/zonas/<id>?recorrido=<id>` | Ficha de la zona con sus capturas y detecciones |

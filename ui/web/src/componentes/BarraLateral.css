@@ -11,9 +11,10 @@
 .sb-nav-item:focus-visible { outline: 3px solid var(--select); outline-offset: 2px; }
 
 @media (max-width: 720px) {
-  .sb-sidebar { width: auto; height: auto; position: static; flex-direction: row; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); overflow-x: auto; }
+  .sb-sidebar { width: auto; height: auto; position: static; flex-direction: row; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); }
   .sb-brand { margin: 0; padding: 0; }
   .sb-wordmark { display: none; }
-  .sb-nav { flex-direction: row; gap: var(--space-1); }
-  .sb-nav-item { height: 44px; padding: 0 var(--space-3); white-space: nowrap; }
+  /* Las cuatro secciones siempre a la vista: icono sobre el texto, en partes iguales. */
+  .sb-nav { flex: 1; min-width: 0; flex-direction: row; gap: var(--space-1); }
+  .sb-nav-item { flex: 1 1 0; min-width: 0; height: 52px; padding: 0; flex-direction: column; justify-content: center; gap: 2px; font: var(--text-caption); }
 }

@@ -9,6 +9,7 @@ import json
 import os
 import re
 import sqlite3
+from collections import Counter
 from datetime import datetime
 
 ESQUEMA = """
@@ -216,7 +217,21 @@ class Almacenamiento:
                 "FROM recorridos r LEFT JOIN modelos m ON m.id = r.modelo_id "
                 "ORDER BY r.inicio DESC LIMIT ?", (limite,)
             ).fetchall()
-        return [dict(f) for f in filas]
+            por_zona = db.execute(
+                "SELECT c.recorrido_id, %s FROM capturas c "
+                "LEFT JOIN detecciones d ON d.captura_id = c.id "
+                "LEFT JOIN clases cl ON cl.codigo = d.clase "
+                "WHERE c.zona_id IS NOT NULL GROUP BY c.recorrido_id, c.zona_id" % RESUMEN_ZONA
+            ).fetchall()
+        # Con estado_zona, para que cada zona cuente igual que en el mapa de ese recorrido.
+        estados = Counter((f["recorrido_id"], estado_zona(f)) for f in por_zona)
+        recorridos = []
+        for f in filas:
+            r = dict(f)
+            r["zonas_maleza"] = estados[(r["id"], "revisar_maleza")]
+            r["zonas_follaje"] = estados[(r["id"], "revisar_follaje")]
+            recorridos.append(r)
+        return recorridos
 
     def recorrido(self, recorrido_id):
         with self._conectar() as db:

@@ -3,8 +3,9 @@ import type { EstadoRecorrido, EstadoZona, GrupoClase } from '../api/tipos'
 /** Nivel visual compartido por insignias, mapa y leyendas. */
 export type Nivel = 'ok' | 'warn' | 'danger' | 'neutral' | 'vacio'
 
-export const ESTADOS_ZONA: Record<EstadoZona, { nivel: Nivel; texto: string }> = {
-  sin_alertas: { nivel: 'ok', texto: 'Sin alertas registradas' },
+/** `corto` es el texto para las celdas del mapa, donde el completo no cabe. */
+export const ESTADOS_ZONA: Record<EstadoZona, { nivel: Nivel; texto: string; corto?: string }> = {
+  sin_alertas: { nivel: 'ok', texto: 'Sin alertas registradas', corto: 'Sin alertas' },
   revisar_maleza: { nivel: 'warn', texto: 'Revisar maleza' },
   revisar_follaje: { nivel: 'danger', texto: 'Revisar follaje' },
   pendiente: { nivel: 'neutral', texto: 'Análisis pendiente' },
