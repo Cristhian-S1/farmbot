@@ -1,0 +1,11 @@
+# Entrenamiento y evaluación (PC o GPU externa, no el dock). Python 3.10 o más reciente.
+# Con GPU NVIDIA instala torch/torchvision con el índice de tu CUDA (ver https://pytorch.org/get-started/locally/).
+torch
+torchvision
+opencv-python-headless
+numpy
+pycocotools
+onnx
+onnxruntime
+pytest
+Flask>=3.0,<3.1

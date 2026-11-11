@@ -1,0 +1,28 @@
+# Alcance de Graphify: documentacion/, src/, ui/, ml/, scripts/ y tests/.
+# Se excluyen binarios, dependencias y carpetas fuera del alcance del encargo.
+
+# Dependencias y entornos
+node_modules/
+.venv/
+datos/
+ui/datos/
+graphify-out/
+.pytest_cache/
+__pycache__/
+*.pyc
+
+# Documentos con imagenes base64 de cientos de KB (no aportan al grafo)
+documentacion/fases/fase1_informe_1.md
+documentacion/fases/informe_parte_2_sabueso.md
+documentacion/fases/*.docx
+
+# Diagramas HTML/SVG (assets, no documentacion semantica)
+documentacion/fases/diagramas/
+
+# Fuera del alcance indicado para el grafo
+robot/
+.agents/
+.beads/
+.opencode/
+.codex/
+.github/

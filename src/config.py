@@ -18,5 +18,9 @@ CALIDAD_JPEG = 80
 # Cada cuántos segundos se envía una captura aunque no haya detecciones (zona observada).
 CAPTURA_ZONA_S = 10
 
+# Modelo de detección ONNX (ml/exportar.py) y puntaje mínimo para registrar un hallazgo.
+MODELO_RUTA = os.path.expanduser(os.environ.get("SABUESO_MODELO", os.path.join(DATOS_DIR, "modelo", "sabueso.onnx")))
+UMBRAL_DETECCION = float(os.environ.get("SABUESO_UMBRAL", "0.5"))
+
 # Transmisión en vivo de la cámara (python3 -m transmision).
 TRANSMISION_PUERTO = 8080

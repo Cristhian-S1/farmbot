@@ -1,0 +1,71 @@
+"""Detector -> registro -> API de ui/, sin cámara ni modelo real."""
+import numpy as np
+import pytest
+
+from almacenamiento import Almacenamiento
+from app import crear_app
+from deteccion import Deteccion, Detector
+from control import ControlRecorrido
+from recorrido.__main__ import crear_captura
+
+CLASES = ["tomate_verde", "tomate_maduro"]
+
+
+class SesionFalsa:
+    """Imita onnxruntime: devuelve cajas (en píxeles), etiquetas base 1 y puntajes."""
+
+    def __init__(self, cajas, etiquetas, puntajes):
+        self.salida = [np.array(cajas, dtype=np.float32).reshape(-1, 4), np.array(etiquetas), np.array(puntajes, dtype=np.float32)]
+        self.entrada = None
+
+    def run(self, _, alimentacion):
+        self.entrada = alimentacion["imagen"]
+        return self.salida
+
+
+def cuadro():
+    return np.full((60, 100, 3), (10, 20, 200), np.uint8)  # BGR: rojo
+
+
+def test_filtra_por_umbral_recorta_y_traduce_clases():
+    sesion = SesionFalsa([[10, 10, 50, 40], [-5, -5, 130, 90], [0, 0, 5, 5]], [2, 1, 1], [0.9, 0.7, 0.2])
+    dets = Detector(sesion=sesion, clases=CLASES, umbral=0.5).detectar(cuadro())
+    assert dets == [Deteccion("tomate_maduro", pytest.approx(0.9), (10, 10, 50, 40)),
+                    Deteccion("tomate_verde", pytest.approx(0.7), (0, 0, 100, 60))]
+    assert sesion.entrada.shape == (3, 60, 100) and sesion.entrada.dtype == np.float32
+    assert sesion.entrada[0, 0, 0] == pytest.approx(200 / 255)  # el canal 0 es R: se convirtió de BGR a RGB
+
+
+def test_sin_modelo_devuelve_vacio(monkeypatch, tmp_path):
+    monkeypatch.delenv("SABUESO_MODELO", raising=False)
+    monkeypatch.setattr("config.MODELO_RUTA", str(tmp_path / "no_existe.onnx"))
+    assert Detector().detectar(cuadro()) == []
+
+
+def test_modelo_pedido_que_no_existe_falla(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        Detector(modelo=str(tmp_path / "no_existe.onnx"))
+
+
+def test_captura_llega_a_la_api_con_el_contrato(tmp_path):
+    detector = Detector(sesion=SesionFalsa([[10, 10, 50, 40]], [2], [0.93]), clases=CLASES)
+    captura = crear_captura("rec1", detector, detector.detectar(cuadro()), cuadro(), 1, None)
+    almacenamiento = Almacenamiento(str(tmp_path), {"sector": "A", "predio": "P", "hileras": 1, "zonas_por_hilera": 1})
+    control = ControlRecorrido(almacenamiento, str(tmp_path), "python3", "http://127.0.0.1:1", str(tmp_path))
+    cliente = crear_app(almacenamiento, control, web_dir=str(tmp_path)).test_client()
+    assert cliente.post("/api/capturas", json=captura).status_code == 201
+    [fila] = cliente.get("/api/capturas").get_json()
+    [det] = fila["detecciones"]
+    assert (det["clase"], det["confianza"], det["caja"]) == ("tomate_maduro", 0.93, [10, 10, 50, 40])
+    assert (fila["recorrido_id"], fila["hilera"], fila["zona"]) == ("rec1", None, None)  # sin zona: no se inventa
+    assert fila["foto"].endswith(".jpg")
+
+
+def test_modelo_cargado_se_identifica_por_archivo(tmp_path):
+    from deteccion.detector import identificar_modelo
+
+    ruta = tmp_path / "sabueso.onnx"
+    ruta.write_bytes(b"modelo")
+    nombre, version = identificar_modelo(str(ruta))
+    assert nombre == "sabueso" and len(version) == 8
+    assert (Detector.nombre, Detector.version) == ("sin_modelo", "0")

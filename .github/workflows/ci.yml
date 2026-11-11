@@ -12,7 +12,22 @@ jobs:
       - uses: actions/checkout@v4
       - run: git diff --check "$(git hash-object -t tree /dev/null)" HEAD -- . ':!*.md'
 
+  red:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck scripts/red/*.sh
+
   # Python 3.8, como en el dock del Go2.
+  python:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+      - run: python -m compileall -q src ui/api
+
   api:
     runs-on: ubuntu-22.04
     defaults:
