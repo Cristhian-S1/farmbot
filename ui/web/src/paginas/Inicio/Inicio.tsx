@@ -19,8 +19,19 @@ const INTERVALO_MS = 5000
 
 export default function Inicio({ estructura, recorridos, recorrido, elegirRecorrido }: PropsPagina) {
   const mapa = useConsulta(() => api.mapa(recorrido), [recorrido], INTERVALO_MS)
-  const conHallazgos = useConsulta(() => api.capturas(recorrido, { hallazgos: true, limite: 200 }), [recorrido], INTERVALO_MS)
-  const recientes = useConsulta(() => api.capturas(recorrido, { limite: 6 }), [recorrido], INTERVALO_MS)
+  // Con "Último recorrido" (recorrido nulo), las capturas siguen al recorrido que muestra el mapa;
+  // sin esto, la API devolvería las de todos los recorridos mezcladas.
+  const mostrado = recorrido ?? mapa.datos?.recorrido ?? null
+  const conHallazgos = useConsulta(
+    () => (mostrado ? api.capturas(mostrado, { hallazgos: true, limite: 200 }) : Promise.resolve([])),
+    [mostrado],
+    INTERVALO_MS,
+  )
+  const recientes = useConsulta(
+    () => (mostrado ? api.capturas(mostrado, { limite: 6 }) : Promise.resolve([])),
+    [mostrado],
+    INTERVALO_MS,
+  )
 
   const zonas = mapa.datos?.zonas ?? []
   const actual = recorridos.find((r) => r.id === mapa.datos?.recorrido)
